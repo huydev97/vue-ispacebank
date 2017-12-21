@@ -1,0 +1,284 @@
+import * as types from './mutation-types'
+import axios from 'axios'
+import router from '../../../router'
+import config from '../../../../config/config'
+
+export default {
+    async getTransactionList({ commit, state }) {
+        let results = await axios({
+            method: 'POST',
+            url: `${config.host}/transaction/getListTransactions`,
+            data: {
+
+            }
+        })
+        let { success, transactions } = results.data
+        if (success)
+            await commit(types.SET_LIST_TRANSACTION, transactions.reverse())
+    },
+    /*
+        xử lý giao dịch
+        processTransaction({ commit, state }, transactionOptions)
+        transactionOptions: {
+            id: Number, ID of transaction
+            state: Number, 1: processed, 0: wait of process
+        }
+    */
+    async processTransaction({ commit, state }, transactionOptions) {
+        try {
+            let results = await axios({
+                method: 'PUT',
+                url: `${config.host}/transaction/update`,
+                data: {
+                    idTransaction: transactionOptions.id,
+                    infoUpdate: {
+                        state: 1
+                    }
+                }
+            })
+            let { success } = results.data
+            if (success) {
+                await commit(types.DELETE_TRANASCTION, transactionOptions.id)
+            }
+            return success
+        } catch (err) {
+            console.log(err)
+        }
+    },
+    async processTransaction({ commit, state }, transactionOptions) {
+        try {
+            let results = await axios({
+                method: 'PUT',
+                url: `${config.host}/transaction/update`,
+                data: {
+                    idTransaction: transactionOptions.id,
+                    infoUpdate: {
+                        state: 1
+                    }
+                }
+            })
+            let { success } = results.data
+            if (success) {
+                await commit(types.DELETE_TRANASCTION, transactionOptions.id)
+            }
+            return success
+        } catch (err) {
+            console.log(err)
+        }
+    },
+    async cancelTransaction({ commit, state }, transactionOptions) {
+        try {
+            let results = await axios({
+                method: 'PUT',
+                url: `${config.host}/transaction/update`,
+                data: {
+                    idTransaction: transactionOptions.id,
+                    infoUpdate: {
+                        state: 2
+                    }
+                }
+            })
+            let { success } = results.data
+            if (success) {
+                await commit(types.DELETE_TRANASCTION, transactionOptions.id)
+            }
+            return success
+        } catch (err) {
+            console.log(err)
+        }
+    },
+    /*
+        chuyển pv
+        transferPv({ commit, state }, options)
+        options: {
+            emailAdmin: String, email admin xử lý
+            email1: String, email người nhận
+            email2: String, email người gửi,
+             pv: Number, số pv
+        }
+    */
+    async transferPv({ commit, state }, options) {
+        try {
+            let results = await axios({
+                method: 'POST',
+                url: `${config.host}/bagbitcoin/transfer`,
+                data: {
+                    emailAdmin: options.emailAdmin,
+                    emailSend: options.email2,
+                    emailReceived: options.email1,
+                    howPV: options.pv
+                },
+                timeout: 5000,
+            })
+            let { success, message } = results.data
+            alert(message)
+            return success
+        } catch (err) {
+            console.log(err)
+        }
+    },
+    /*
+        cộng pv
+        incrementPv({ commit, state }, options)
+        options: {
+            emailAdmin: String, email admin xử lý
+            email1: String, email người nhận,
+            pv: Number, số pv
+        }
+    */
+    async incrementPv({ commit, state }, options) {
+        try {
+            let results = await axios({
+                method: 'POST',
+                url: `${config.host}/bagbitcoin/pvAction`,
+                data: {
+                    type: '+',
+                    emailAdmin: options.emailAdmin,
+                    emailUser: options.email1,
+                    howPV: options.pv
+                },
+                timeout: 5000,
+            })
+            let { success, message } = results.data
+            alert(message)
+            return success
+        } catch (err) {
+            console.log(err)
+        }
+    },
+
+    /*
+        trừ pv
+        decrementPv({ commit, state }, options)
+        options: {
+            emailAdmin: String, email admin xử lý
+            email1: String, email người nhận,
+            pv: Number, số pv
+        }
+    */
+    async decrementPv({ commit, state }, options) {
+        try {
+            let results = await axios({
+                method: 'POST',
+                url: `${config.host}/bagbitcoin/pvAction`,
+                data: {
+                    type: '-',
+                    emailAdmin: options.emailAdmin,
+                    emailUser: options.email1,
+                    howPV: options.pv
+                },
+                timeout: 5000,
+            })
+            let { success, message } = results.data
+            alert(message)
+            return success
+        } catch (err) {
+            console.log(err)
+        }
+    },
+    /*
+        lấy danh sách các user
+    */
+    async getListUser({ commit, state }) {
+        try {
+            let results = await axios({
+                method: 'POST',
+                url: `${config.host}/user/getlistusers`,
+                data: {
+
+                },
+                timeout: 5000,
+            })
+            let { success, message, users } = await results.data
+            await commit(types.SET_LIST_USER, users)
+        } catch (err) {
+            console.log(err)
+        }
+    },
+
+    /*
+        cấm một người nào đó
+        bannedUser({commit, state}, options)
+        options: {
+            idUser: Number,
+            isActive: Boolean 
+        }
+    */
+
+    async toggleUserActive({ dispatch, commit, state }, options) {
+        try {
+            let results = await axios({
+                method: 'PUT',
+                url: `${config.host}/user/update`,
+                data: {
+                    conditions: {
+                        id: options.idUser
+                    },
+                    infoUpdate: {
+                        isActive: options.isActive === 0 ? 1 : 0
+                    }
+                },
+                timeout: 5000,
+            })
+            let { success, message } = await results.data
+            if (success) {
+                await commit(types.BANNED_USER, options.index)
+            }
+            return success
+        } catch (err) {
+            console.log(err)
+        }
+    },
+    /*
+        set moder cho người nào đó bằng email
+        setModer({ commit, state }, options) 
+        options: {
+           emailUser: String
+        }
+    */
+    async toggleModer({ commit, state }, options) {
+        try {
+            let results = await axios({
+                method: 'POST',
+                url: `${config.host}/user/togglemoder`,
+                data: {
+                    emailUser: options.emailUser
+                },
+                timeout: 5000,
+            })
+            let { success, message, currentLevel } = await results.data
+            if (success) {
+                alert(`This acount now is ${currentLevel === 1 ? 'moder' : 'normal user'}!`)
+            }
+            return success
+        } catch (err) {
+            console.log(err)
+        }
+    },
+    /*
+        random một mật khẩu mới cho người chơi
+        options: {
+            emailUser: String
+        }
+    */
+    async changeUserPassword({ commit, state }, options) {
+        try {
+            let results = await axios({
+                method: 'POST',
+                url: `${config.host}/user/resetPasswordUser`,
+                data: {
+                    emailUser: options.emailUser
+                },
+                timeout: 5000,
+            })
+            let { success, message } = await results.data
+            if (success) {
+                alert(message)
+            }
+            return success
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+}

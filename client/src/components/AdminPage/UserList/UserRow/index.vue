@@ -1,0 +1,90 @@
+<template>
+    <div style="padding: 0.5%">
+
+        <v-card class="" style=" margin: auto">
+            <v-card-title primary-title style="margin: 0; margin-left: 15px; padding: 0; padding-top: 5px;">
+                <div class="title">
+                    <strike v-show="_user.isActive === 0">{{_user.fullname || _user.email}}</strike>
+                    <label v-show="_user.isActive === 1">{{_user.fullname || _user.email}}</label>
+                    <label v-show="_user.isAdmin > 0">
+                        ({{ _user.isAdmin > 0 ? `Admin Level: ${_user.isAdmin}` : ''}})
+                    </label>
+
+                </div>
+            </v-card-title>
+            <div style="padding-left: 15px; margin: 0px;">
+                <div class="body-3">Email: {{_user.email}}</div>
+                <div class="body-3">
+                    Total Withraw:
+                    <label class="blue--text">{{_user.total_withdraw}} PV</label>
+                    | Balance Wallet:
+                    <label class="blue--text">{{_user.balance_wallet}} PV</label>
+                    | Investment:
+                    <label class="blue--text">{{_user.investment}} PV</label>
+                </div>
+                <label>
+                    <v-dialog v-model="dialog" lazy absolute>
+                        <v-btn slot="activator" :loading="isRequesting" v-tooltip:right="{ html: 'Banned this user' }" error small>{{_user.isActive === 1 ? 'Ban' : 'Unban'}}</v-btn>
+                        <v-card>
+                            <v-card-title>
+                                <div class="headline">Are you want to {{_user.isActive === 1 ? 'banned' : 'unban'}} this user?</div>
+                            </v-card-title>
+                            <v-card-text>After you {{_user.isActive === 1 ? 'banned' : 'unban'}}, this user can
+                                <label v-show="_user.isActive === 1">not</label> login again.</v-card-text>
+                            <v-card-actions>
+                                <v-spacer></v-spacer>
+                                <v-btn class="green--text darken-1" flat="flat" @click.native="dialog = false">Disagree</v-btn>
+                                <v-btn class="green--text darken-1" flat="flat" @click.native="_toggleUserActive">Agree</v-btn>
+                            </v-card-actions>
+                        </v-card>
+                    </v-dialog>
+                </label>
+            </div>
+        </v-card>
+    </div>
+</template>
+
+<script>
+export default {
+    props: {
+        index: Number,
+        user: Object,
+        toggleUserActive: Function
+    },
+    data() {
+        return {
+            isRequesting: false,
+            dialog: false
+        }
+    },
+    computed: {
+        _user() {
+            return this.user
+        },
+        _index() {
+            return this.index
+        }
+    },
+    methods: {
+        async _toggleUserActive() {
+            this.dialog = false
+            this.isRequesting = true
+            let options = {
+                idUser: this._user.id,
+                isActive: this._user.isActive,
+                index: this._index
+            }
+            let success = await this.toggleUserActive(options)
+            if (success) {
+                this._user.isActive === !this._user.isActive
+            } else {
+            }
+            this.isRequesting = false
+        }
+    }
+}
+</script>
+
+<style scoped>
+
+</style>

@@ -1,0 +1,69 @@
+import Vue from 'vue'
+import Router from 'vue-router'
+
+const HomePage = () => import('@/containers/HomePage')
+const LoginPage = () => import('@/containers/LoginPage')
+const RegisterPage = () => import('@/containers/RegisterPage')
+const ServicePage = () => import('@/containers/ServicePage')
+const Contact = () => import('@/containers/ContactPage')
+const InvestmentPage = () => import('@/containers/InvestmentPage')
+const DashboardPage = () => import('@/containers/InvestmentPage/DashboardPage')
+const DepositPage = () => import('@/containers/InvestmentPage/DepositPage')
+const AgreementPage = () => import('@/containers/InvestmentPage/AgreementPage')
+const PrivacyPage = () => import('@/containers/InvestmentPage/PrivacyPage')
+const MyAffiliatePage = () => import('@/containers/InvestmentPage/MyAffiliatePage')
+const AccountPage = () => import('@/containers/InvestmentPage/AccountPage')
+
+Vue.use(Router)
+
+export default new Router({
+  mode: 'history',
+  routes: [
+    {
+      path: '/',
+      name: 'home',
+      component: HomePage
+    },
+    {
+      path: '/services',
+      name: 'services',
+      component: ServicePage
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: LoginPage
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: RegisterPage
+    },
+    {
+      path: '/contact',
+      name: 'contact',
+      component: Contact
+    },
+    {
+      path: '/investment',
+      auth: true,
+      component: InvestmentPage,
+      children: [
+        { path: '', name: 'default-investment-page', component: DashboardPage },
+        { path: 'dashboard', name: 'dashboard-page', component: DashboardPage },
+        { path: 'deposit', name: 'deposite-page', component: DepositPage },
+        { path: 'account', name: 'account-page', component: AccountPage },
+        { path: 'agreement', name: 'agreement-page', component: AgreementPage },
+        { path: 'privacy', name: 'privacy-page', component: PrivacyPage },
+        { path: 'affiliate', name: 'affiliate-page', component: MyAffiliatePage }
+
+      ],
+      meta: {
+        auth: true
+      }
+    }
+  ],
+  scrollBehavior(to, from, savedPosition) {
+    return { x: 0, y: 0 }
+  }
+})

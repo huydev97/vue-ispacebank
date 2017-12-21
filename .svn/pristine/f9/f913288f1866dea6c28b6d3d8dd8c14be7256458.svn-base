@@ -1,0 +1,35 @@
+<template>
+    <div class="side-left">
+        <v-list>
+            <v-list-tile avatar v-for="(item, i) in _menus" v-bind:key="item.name" style="min-width: 220px; width: 100%;height: 60px;">
+                <router-link style="width: 100%; height: 100%; text-decoration: none;" :to="item.to">
+                    <v-list-tile-content>
+                        <v-list-tile-title class="black--text body-2">
+                            <v-icon style="margin-right: 10px; color: #0073ff;">{{ item.action }}</v-icon>{{item.name}}</v-list-tile-title>
+                    </v-list-tile-content>
+                    <v-divider light></v-divider>
+                </router-link>
+            </v-list-tile>
+        </v-list>
+
+    </div>
+</template>
+
+<script>
+export default {
+    name: 'side-left-menu',
+    props: {
+        menus: Array,
+    },
+    computed: {
+        _menus() {
+            return this.menus
+        }
+    }
+
+}
+</script>
+
+<style scoped>
+
+</style>

@@ -1,0 +1,26 @@
+<template>
+    <div>
+        <action-form :changeUserPassword="changeUserPassword" :userEmail="user.email" :toggleModer="toggleModer" :transferPv="transferPv" :incrementPv="incrementPv" :decrementPv="decrementPv"></action-form>
+    </div>
+</template>
+
+<script>
+import { mapActions, mapGetters } from 'vuex'
+const ActionForm = () => import('../../../components/AdminPage/ActionForm')
+export default {
+    components: {
+        ActionForm
+    },
+    computed: {
+        ...mapGetters(['user'])
+    },
+    methods: {
+        ...mapActions(['transferPv', 'incrementPv', 'decrementPv', 'toggleModer', 'changeUserPassword'])
+    }
+
+}
+</script>
+
+<style scoped>
+
+</style>

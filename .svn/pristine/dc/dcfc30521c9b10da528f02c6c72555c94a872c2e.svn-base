@@ -1,0 +1,92 @@
+/**
+ * Policy Mappings
+ * (sails.config.policies)
+ *
+ * Policies are simple functions which run **before** your controllers.
+ * You can apply one or more policies to a given controller, or protect
+ * its actions individually.
+ *
+ * Any policy file (e.g. `api/policies/authenticated.js`) can be accessed
+ * below by its filename, minus the extension, (e.g. "authenticated")
+ *
+ * For more information on how policies work, see:
+ * http://sailsjs.org/#!/documentation/concepts/Policies
+ *
+ * For more information on configuring policies, check out:
+ * http://sailsjs.org/#!/documentation/reference/sails.config/sails.config.policies.html
+ */
+
+
+module.exports.policies = {
+
+  /***************************************************************************
+  *                                                                          *
+  * Default policy for all controllers and actions (`true` allows public     *
+  * access)                                                                  *
+  *                                                                          *
+  ***************************************************************************/
+
+  //'*': true,
+  user: {
+    delete: 'tokenAdmin',
+    update: 'tokenAdmin',
+    updateUser: 'tokenAuth',      
+    getListUsers: 'tokenModer',
+    getUserByToken: 'tokenAuth',
+    getListUserIsModer: 'tokenAdmin',
+    getListUserIsAdmin: 'tokenAdmin',
+    getRefer : 'tokenAuth',
+    blockUser : 'tokenAdmin',
+    toggleModer : ['tokenAdmin','confirmPassword'],
+    resetPasswordUser : ['tokenAdmin','confirmPassword'],
+  },
+  historyinterestreceived: {
+    getListMyHistory: 'tokenAuth'
+  },
+  transaction: [true, 'tokenAuth'],
+  transaction: {
+    delete : 'tokenAuth',
+    getListTransactions : 'tokenAdmin',
+    getListMyTransactions : 'tokenAuth',
+    update : 'tokenAdmin',
+    create : ['tokenAuth','confirmPassword'],
+    withDraw :  ['tokenAuth','confirmPassword'],
+    acceptWithDraw : 'tokenAdmin'
+  },
+  bagbitcoin: [true, 'tokenAdmin'],
+  bagbitcoin : {
+
+    read :'tokenAuth',
+    setPointForAdmin : 'tokenAdmin',
+    investment : ['tokenAuth','confirmPassword'],
+    pvAction : ['tokenAdmin','confirmPassword'],
+    transfer: ['tokenModer','confirmPassword'],
+    getHistoryMyTranfers : 'tokenAuth',
+    getHistoryTranfers : 'tokenAdmin',
+    getHistoryMyInterests : 'tokenAuth'
+  },
+  giveinterest : {
+    getHistoryInterestReceived : 'tokenAdmin',
+  }
+
+  /***************************************************************************
+  *                                                                          *
+  * Here's an example of mapping some policies to run before a controller    *
+  * and its actions                                                          *
+  *                                                                          *
+  ***************************************************************************/
+  // RabbitController: {
+
+  // Apply the `false` policy as the default for all of RabbitController's actions
+  // (`false` prevents all access, which ensures that nothing bad happens to our rabbits)
+  // '*': false,
+
+  // For the action `nurture`, apply the 'isRabbitMother' policy
+  // (this overrides `false` above)
+  // nurture	: 'isRabbitMother',
+
+  // Apply the `isNiceToAnimals` AND `hasRabbitFood` policies
+  // before letting any users feed our rabbits
+  // feed : ['isNiceToAnimals', 'hasRabbitFood']
+  // }
+};

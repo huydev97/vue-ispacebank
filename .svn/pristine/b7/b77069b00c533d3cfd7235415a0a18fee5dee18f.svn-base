@@ -1,0 +1,60 @@
+<template>
+    <div style="padding: 10px; max-width: 500px; width: 100%">
+        <v-card class="white black--text" style="border-radius: 5px;">
+            <v-card-title primary-title>
+                <div class="headline">
+                    <b class="green--text">{{_pv || 0}} PV</b>
+                </div>
+            </v-card-title>
+            <v-card-text>
+                <div style="display: flex; flex-direction: row;">
+                    <div>
+                        <b>Dayly:</b> 15 days<br />
+                        <b>Estimate ratio:</b> {{_lai}}%<br />
+                        <b>Estimate amount:</b> {{(_pv*_lai)/100 | formatMoney}} PV
+                    </div>
+                    <v-spacer></v-spacer>
+                    <div>
+                        <b>Operating time:</b> {{15*_chuky}} days<br/>
+                        <b>Total estimate ratio:</b> {{_lai*_chuky}}%<br />
+                        <b>Total estimate:</b> {{_pv*_lai*_chuky | formatMoney}} PV
+                    </div>
+                </div>
+            </v-card-text>
+            <v-card-actions>
+                <v-btn class="green" dark>Investment Now</v-btn>
+            </v-card-actions>
+        </v-card>
+    </div>
+</template>
+
+<script>
+export default {
+    name: 'deposite-box',
+    props: {
+        pv: Number,
+        lai: Number,
+        chuky: Number
+    },
+    computed: {
+        _pv() {
+            return this.pv
+        },
+        _lai() {
+            return this.lai
+        },
+        _chuky() {
+            return this.chuky
+        }
+    },
+    filters: {
+        formatMoney: function (value) {
+            return value.toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+        }
+    }
+}
+</script>
+
+<style scoped>
+
+</style>

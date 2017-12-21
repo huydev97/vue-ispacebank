@@ -1,0 +1,20 @@
+<template>
+    <div>
+        <affiliate-link-box style="padding: 10px; margin: 1%"></affiliate-link-box>
+    </div>
+</template>
+
+<script>
+import AffiliateLinkBox from '../../../components/Invest/AffilateLinkBox'
+
+export default {
+    name: 'affiliate-page',
+    components: {
+        AffiliateLinkBox
+    }
+}
+</script>
+
+<style scoped>
+
+</style>

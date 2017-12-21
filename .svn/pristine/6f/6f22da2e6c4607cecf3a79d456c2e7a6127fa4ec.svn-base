@@ -1,0 +1,50 @@
+<template>
+    <div class="white" style="margin: 1%; border-radius: 7px; overflow: hidden; min-height: 700px;">
+        <v-layout row wrap>
+            <side-left-menu :username="user.username" :menus="menus"></side-left-menu>
+            <div class="right-side">
+                <router-view style="padding: 0px;"></router-view>
+            </div>
+        </v-layout>
+    </div>
+</template>
+
+<script>
+import store from '../../store'
+import SideLeftMenu from '../../components/Invest/SideLeftMenu'
+import { mapGetters } from 'vuex'
+
+export default {
+    name: 'investment-page',
+    components: {
+        SideLeftMenu
+    },
+    data() {
+        return {
+            menus: [
+                { name: 'Dashboard', to: '/investment/dashboard', action: 'fa-newspaper-o' },
+                { name: 'Make Deposit', to: '/investment/deposit', action: 'fa-dropbox' },
+                { name: 'Affiliate Program', to: '/investment/affiliate', action: 'fa-pie-chart' },
+                { name: 'Account Settings', to: '/investment/account', action: 'fa-user-circle-o' },
+                { name: 'Agency Agreement', to: '/investment/agreement', action: 'fa-file-text' },
+                { name: 'Privacy Policy', to: '/investment/privacy', action: 'fa-file-text' }
+            ],
+
+        }
+    },
+    computed: {
+        ...mapGetters(['user'])
+    }
+}
+</script>
+
+<style scoped>
+.right-side {
+    flex: 1;
+    min-height: 700px;
+    padding: 5px;
+    background-color: #f2f4f8;
+    background-image: url('../../assets/images/bg-pattern.png');
+    background-repeat: no-repeat;
+}
+</style>

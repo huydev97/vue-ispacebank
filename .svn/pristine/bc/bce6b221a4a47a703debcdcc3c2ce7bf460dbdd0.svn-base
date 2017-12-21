@@ -1,0 +1,126 @@
+/**
+ * TransactionController
+ *
+ * @description :: Server-side logic for managing transactions
+ * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
+ */
+
+module.exports = {
+    // CRUD USER
+    /** 
+     *  Function : Create a new user
+     *  Method : POST
+     *  Inputs : idUser, package
+     */
+    create: async (req, res, next) => {
+        if (req.method != 'POST')
+            return res.json({ success: false, message: 'Something is wrong at router\'\s method.' });
+        if (!req.body.idUser || !req.body.package || !req.body.type || req.body.idUser == '' || req.body.package == '' || req.body.type == '')
+            return res.json({ success: false, message: 'Some fields is lost.' });
+        Transaction.create({
+            id_user: req.body.idUser,
+            type: req.body.type,
+            package: req.body.package,
+            note: req.body.note || ''
+        }).exec((err, transaction) => {
+            if (err)
+                res.json({ success: false, message: 'Failed to create tranaction.', errQuery: err });
+            else
+                res.json({ success: true, message: 'Success to create tranaction!.' });
+        });
+    },
+
+    /** 
+    *  Function : Update a transaction in database
+    *  Method : PUT
+    *  Inputs : An idTransaction and Object informations need to update
+    */
+    update: async (req, res, next) => {
+        if (req.method != 'PUT')
+            return res.json({ success: false, message: 'Something is wrong at router\'\s method.' });
+        if (!req.body.idTransaction || !req.body.infoUpdate)
+            return res.json({ success: false, message: 'You need send me  idTransaction and a Object about information need to update(infoUpdate: { some attributes }) to use this route.' });
+        Transaction.update({ id: req.body.idTransaction }, req.body.infoUpdate, (err, updated) => {
+            if (err)
+                return res.json({ success: false, message: 'Error about query, please try again!', errQuery: err });
+            if (updated.length <= 0)
+                res.json({ success: false, message: 'Can\'t find transaction to update!!' });
+            else
+                res.json({ success: true, message: 'Updated transaction have name ' + updated[0].name });
+        });
+    },
+
+    /** 
+     *  Function : Delete a transaction in database
+     *  Method : DELETE
+     *  Inputs : Id transaction to delete
+     */
+    delete: async (req, res, next) => { // Delete user by Object conditions
+        if (req.method != 'DELETE')
+            return res.json({ success: false, message: 'Something is wrong at router\'\s method.' });
+        if (!req.body.id_transaction)
+            return res.json({ success: false, message: 'You need send me a Object about conditions to use this route.' });
+        Transaction.destroy({
+            id: req.body.id_transaction
+        }).exec((err, deleted) => {
+            if (err)
+                return res.json({ success: false, message: 'Error about query, please try again!', errQuery: err });
+            if (deleted.length <= 0)
+                res.json({ success: false, message: 'Can\'t find transaction to delete!!' });
+            else
+                res.json({ success: true, message: 'Deleted transaction id : #' + deleted[0].id, id_transaction: deleted[0].id });
+        });
+    },
+    /** 
+     *  Function : Get list transaction in database
+     *  Method : POST
+     *  Inputs :
+     */
+    getListTransactions: async (req, res, next) => {
+        if (req.method != 'POST')
+            return res.json({ success: false, message: 'Something is wrong at router\'\s method.' });
+        let trans = [];
+        Transaction.find({ state: { '<=': 0 } }).exec(async (err, transactions) => {
+            if (err)
+                return res.json({ stransactionsuccess: false, message: 'Error about query, please try again!', errQuery: err });
+            if (!transactions)
+                return res.json({ success: false, message: 'Failed to get list transactions.' });
+            await Promise.all(transactions.map(async (transaction, index) => {
+                let user = await User.findOne({ id: transaction.id_user });
+                if (user) {
+                    transactions[index].email = user.email;
+                    transactions[index].fullname = user.fullname;
+                    //trans.push(transaction);
+                }
+            }));
+            res.json({ success: true, message: 'Success to get list transactions!', transactions: transactions });
+        });
+    },
+    /** 
+     *  Function : Get list transaction in database
+     *  Method : POST
+     *  Inputs :idUser
+     */
+    getListMyTransactions: async (req, res, next) => {
+        if (req.method != 'POST')
+            return res.json({ success: false, message: 'Something is wrong at router\'\s method.' });
+        if (!req.body.idUser || req.body.idUser == '' )
+            return res.json({ success: false, message: 'You need to send me idUser.' });
+        let trans = [];
+        Transaction.find({id_user: req.body.idUser}).exec(async (err, transactions) => {
+            if (err)
+                return res.json({ stransactionsuccess: false, message: 'Error about query, please try again!', errQuery: err });
+            if (!transactions)
+                return res.json({ success: false, message: 'Failed to get list transactions.' });
+            await Promise.all(transactions.map(async (transaction, index) => {
+                let user = await User.findOne({ id: transaction.id_user });
+                if (user) {
+                    transactions[index].email = user.email;
+                    transactions[index].fullname = user.fullname;
+                    //trans.push(transaction);
+                }
+            }));
+            res.json({ success: true, message: 'Success to get list transactions!', transactions: transactions });
+        });
+    },
+};

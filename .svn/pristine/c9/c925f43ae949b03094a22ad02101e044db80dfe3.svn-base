@@ -1,0 +1,53 @@
+<template>
+    <div>
+        <v-container class="white about-container">
+            <img class="image-ab" src="../../../assets/images/service-split-05.jpg" />
+            <img class="image-ab" src="../../../assets/images/OF71YA0.jpg" />
+            <div class="content-ab">
+                <h2 class="black--text text-sm-left">About Us</h2>
+                <p class="body-2 content-title-ab  text-sm-left">
+                    We are a leader in global payment services. From small businesses and global corporations, to families near and far away, to NGOs in the most remote communities on Earth, iSpace Bank Helps people and businesses move money – to help grow economies and realize a better world. We continue to innovate, developing new ways to send money through digital, mobile, and retail channels, with an array of convenient pay-out options to meet business and consumer needs
+                </p>
+                <v-btn to="/about" outline primary large class="black black--text">Read More ></v-btn>
+            </div>
+        </v-container>
+        <v-divider dark></v-divider>
+    </div>
+</template>
+
+<script>
+export default {
+    name: 'home-about-us',
+
+}
+</script>
+
+<style scoped>
+.about-container {
+    max-width: 100%;
+    margin: 0;
+    padding: 10px;
+    padding-top: 50px;
+    padding-bottom: 50px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.image-ab {
+    flex: 1;
+    margin: 5px;
+    margin-left: 5vh;
+}
+
+.content-ab {
+    flex: 2;
+    margin: 5px;
+    margin-left: 5vh;
+}
+
+.content-title-ab {
+    color: #444;
+    font-size: 16px;
+}
+</style>

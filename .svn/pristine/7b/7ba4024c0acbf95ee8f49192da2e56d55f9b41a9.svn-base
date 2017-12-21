@@ -1,0 +1,29 @@
+<template>
+  <div class="container">
+    <!-- home component -->
+    <home></home>
+
+  </div>
+</template>
+
+<script>
+
+
+import Home from '../../components/HomePage/index'
+export default {
+  name: 'homepage',
+  components: {
+    Home
+  },
+  data() {
+    return {}
+  }
+}
+</script>
+
+<style scoped>
+.container {
+  max-width: 100%;
+  width: 100%;
+}
+</style>

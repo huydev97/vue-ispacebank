@@ -1,0 +1,26 @@
+import * as types from './mutation-types'
+
+export default {
+    async login({ commit, state }, user) {
+        await commit(types.LOGIN_REQUEST)
+        if (user.username === "hynguyen" && user.password === "123456") {
+            await commit(types.LOGIN_SUCCESS)
+            return true
+        } else {
+            return false
+        }
+    },
+    async logout({ commit, state }) {
+        await commit(types.LOGOUT)
+    },
+    async register({ commit, state }, user) {
+        await commit(types.REGISTER_REQUEST)
+        if (user.username === "hynguyen" && user.password === "123456") {
+            await commit(types.REGISTER_SUCCESS)
+            return true
+        } else {
+            return false
+        }
+    },
+}
+

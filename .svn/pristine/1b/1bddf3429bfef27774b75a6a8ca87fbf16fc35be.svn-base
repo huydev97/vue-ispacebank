@@ -1,0 +1,74 @@
+/**
+ * TransactionController
+ *
+ * @description :: Server-side logic for managing transactions
+ * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
+ */
+
+module.exports = {
+    // CRUD USER
+    /** 
+     *  Function : Create a new user
+     *  Method : POST
+     *  Inputs : id_user, packet
+     */
+    create : async (req, res, next) => {
+        if (req.method != 'POST')
+            return res.json({ success: false, message: 'Something is wrong at router\'\s method.' });
+        if (!req.body.id_user || req.body.packet || req.body.id_user == '' || req.body.packet == '')
+            return res.json({ success: false, message: 'Some fields is lost.' });
+        Transaction.create({
+            id_user : req.body.id_user,
+            packet : req.body.packet,
+        }).exec((err, transaction) => {
+            if(err)
+                res.json({ success: false, message: 'Failed to create tranaction.', errQuery : err });
+            else
+                res.json({ success: true, message: 'Success to create tranaction!.'});
+        });
+    },
+    
+     /** 
+     *  Function : Update a transaction in database
+     *  Method : PUT
+     *  Inputs : An id_transaction and Object informations need to update
+     */
+    update: async (req, res, next) => {
+        if (req.method != 'PUT')
+            return res.json({ success: false, message: 'Something is wrong at router\'\s method.' });
+        if (!req.body.id_transaction || !req.body.infoUpdate)
+            return res.json({ success: false, message: 'You need send me  id_transaction and a Object about information need to update(infoUpdate: { some attributes }) to use this route.' });
+
+        Transaction.update({id : req.id_transaction}, req.body.infoUpdate, (err, updated) => {
+            if (err)
+                return res.json({ success: false, message: 'Error about query, please try again!', errQuery: err });
+            if (updated.length <= 0)
+                res.json({ success: false, message: 'Can\'t find transaction to update!!' });
+            else
+                res.json({ success: true, message: 'Updated transaction have name ' + updated[0].name });
+        });
+    },
+
+    /** 
+     *  Function : Delete a transaction in database
+     *  Method : DELETE
+     *  Inputs : Id transaction to delete
+     */
+    delete: async (req, res, next) => { // Delete user by Object conditions
+        if (req.method != 'DELETE')
+            return res.json({ success: false, message: 'Something is wrong at router\'\s method.' });
+        if (!req.body.id_transaction)
+            return res.json({ success: false, message: 'You need send me a Object about conditions to use this route.' });
+        Transaction.destroy({
+            id : req.body.id_transaction
+        }).exec((err, deleted) => {
+            if (err)
+                return res.json({ success: false, message: 'Error about query, please try again!', errQuery: err });
+            if (deleted.length <= 0)
+                res.json({ success: false, message: 'Can\'t find transaction to delete!!' });
+            else
+                res.json({ success: true, message: 'Deleted transaction id : #' + deleted[0].id , id_transaction : deleted[0].id });
+        });
+    },
+};
+

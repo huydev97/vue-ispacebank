@@ -1,0 +1,156 @@
+import * as types from './mutation-types'
+import axios from 'axios'
+import VueCoookie from 'vue-cookie'
+import router from '../router'
+import config from '../../config/config'
+
+export default {
+    async getBitcoinPrice({ dispatch, commit }) {
+        let results = await axios({
+            method: 'GET',
+            url: 'https://blockchain.info/vi/ticker',
+            data: {
+
+            },
+            timeout: 5000,
+        })
+        if (results.data.USD) {
+            // console.log(results.data.USD)
+            await commit(types.UPDATE_BITCOIN_PRICE, results.data.USD)
+        }
+        setTimeout(() => dispatch('getBitcoinPrice'), 1000)
+    },
+    /*
+        update gói đầu tư
+        params options: {
+            idUser: Number,
+            pv: Number
+        }
+    */
+    async createTransaction({ commit, state }, options) {
+        let results = await axios({
+            method: 'POST',
+            url: `${config.host}/transaction/create`,
+            data: {
+                type: options.type,
+                state: options.state || 0,
+                note: options.note,
+                idUser: options.idUser,
+                package: options.pv
+            },
+            timeout: 5000,
+        })
+    },
+
+    /*
+        lấy dữ liệu đầu tư
+        getUserBagBitcoin({ commit, state }, idUser)
+         idUser: Number
+
+    */
+    async getUserBagBitcoin({ commit, state }, idUser) {
+        let results = await axios({
+            method: 'POST',
+            url: `${config.host}/bagbitcoin/read`,
+            data: {
+                idUser: idUser,
+                login_token: VueCoookie.get('login_token')
+            },
+            timeout: 5000,
+        })
+        let { users } = results.data
+        commit(types.UPDATE_USER_BAG_BITCOIN, {
+            total: users.total_withdraw || 0,
+            balance: users.balance_wallet || 0,
+            invest: users.investment || 0
+        })
+    },
+    /*
+        update gói đầu tư
+        params options: {
+            type: 3 add fun
+            idUser: Number,
+            pv: Number
+        }
+    */
+    async buyPv({ commit, state }, options) {
+        let results = await axios({
+            method: 'POST',
+            url: `${config.host}/transaction/create`,
+            data: {
+                type: 3,
+                idUser: options.idUser,
+                note: options.eWallet,
+                package: options.amountBTC
+            },
+            timeout: 5000,
+        })
+        let { success, message } = results.data
+        alert('SERVER: ' + message)
+        return success
+    },
+    /*
+        gui yeu cau chuyen pv cho admin
+        userTransferPv({ commit, state }, options)
+        options: {
+            emailAdmin: String,
+            emailSend: String, email người gửi
+            emailReceived: String, email người nhận
+        }
+    */
+    async userTransferPv({ commit, state }, options) {
+        let results = await axios({
+            method: 'POST',
+            url: `${config.host}/bagbitcoin/transfer`,
+            data: {
+                emailAdmin: options.emailSend,
+                emailSend: options.emailSend,
+                emailReceived: options.emailReceived,
+                howPV: options.howPV
+            },
+        })
+        let { success, message } = results.data
+        alert('SERVER: ' + message)
+        return success
+    },
+    /*
+        lay dữ liệu lịch sử giao dịch của user
+        getUserHistoryTransaction({commit, state}, options)
+        options: {
+            idUser: Number
+        }
+    */
+    async getUserHistoryTransaction({ commit, state }, options) {
+        let results = await axios({
+            method: 'POST',
+            url: `${config.host}/transaction/getlistmytransactions`,
+            data: {
+                idUser: options.idUser
+            },
+        })
+        let { success, message, transactions } = results.data
+        if (success) {
+            await commit(types.UPDATE_USER_HISTORY_TRANSACTION, transactions.reverse())
+        }
+    },
+    /*
+       lay dữ liệu lịch sử chuyển pv của user
+       getUserHistoryTransfer({commit, state}, options)
+       options: {
+           emailSender: String 
+       }
+   */
+    async getUserHistoryTransfer({ commit, state }, options) {
+        let results = await axios({
+            method: 'POST',
+            url: `${config.host}/bagbitcoin/gethistorymytranfers`,
+            data: {
+                emailSender: options.emailSender,
+            },
+        })
+        let { success, message, historys } = results.data
+        if (success) {
+            await commit(types.UPDATE_USER_HISTORY_TRANSFER, historys.reverse())
+        }
+    }
+}

@@ -1,0 +1,150 @@
+<template>
+    <v-container class="about-container">
+        <v-layout>
+            <v-flex class="contact-info">
+                <v-icon x-large class="blue--text">room</v-icon>
+                <div class="text-info-header">Easy to find us on map!</div>
+                <div class="style-info">
+                    <v-icon class="grey lighten-2 black--text icon-info">room</v-icon>
+                    <div class="text-info">2915 Stillwell Ave, Brooklyn, NY 11224 USA</div>
+                </div>
+
+                <v-divider light></v-divider>
+
+                <div class="style-info">
+                    <v-icon class="grey lighten-2 black--text icon-info" left>phone</v-icon>
+                    <div class=" text-info">+1 585-209-2272</div>
+                </div>
+
+                <v-divider light></v-divider>
+
+                <div class="style-info">
+                    <v-icon class="grey lighten-2 black--text icon-info" left>email</v-icon>
+                    <div class=" text-info">evolution@ispacebank.us</div>
+                </div>
+
+                <v-divider light></v-divider>
+
+                <div class="style-info">
+                    <v-icon class="grey lighten-2 black--text icon-info" left>fa-globe</v-icon>
+                    <a href="https://ispacebank.com" target="_blank" class="style-link">https://ispacebank.us</a>
+                </div>
+
+                <v-spacer></v-spacer>
+
+                <v-layout row wrap class="layout-icon-link">
+                    <a href="https://www.facebook.com" target="_blank">
+                        <i class="fa fa-facebook-square icon-link fa-2x" aria-hidden="true"></i>
+                    </a>
+                    <a href="https://www.twitter.com" target="_blank">
+                        <i class="fa fa-twitter-square icon-link fa-2x" aria-hidden="true"></i>
+                    </a>
+                    <a href="https://www.instagram.com" target="_blank">
+                        <i class="fa fa-instagram icon-link fa-2x" aria-hidden="true"></i>
+                    </a>
+                    <a href="https://plus.google.com" target="_blank">
+                        <i class="fa fa-google-plus-square icon-link fa-2x" aria-hidden="true"></i>
+                    </a>
+                </v-layout>
+            </v-flex>
+            <v-flex>
+                <!-- <gmap-map :center="center" :zoom="17" style="width: 880px; height: 500px" class="fade-animation">
+                    <gmap-marker :key="index" :position="{lat: 40.5762672, lng: -73.9812734}" :clickable="true" :draggable="true" @click="center={lat: 40.5762672, lng: -73.981295}" :icon="icon">
+                    </gmap-marker>
+                </gmap-map> -->
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d584.1958635827099!2d-73.98144177326984!3d40.57619482269633!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c2443566722a09%3A0xb65c94eecf420101!2sISPACEBANK!5e0!3m2!1svi!2sin!4v1506337067846" width="880" height="500" frameborder="0" style="border:0" allowfullscreen></iframe>
+            </v-flex>
+        </v-layout>
+    </v-container>
+</template>
+
+<script>
+export default {
+    name: 'contact-info',
+    data() {
+        return {
+            // center: { lat: 40.5762672, lng: -73.9812734},
+            // icon: {
+            //     url: 'http://4.bp.blogspot.com/-c7AVVLNPrmo/U_Pcl6aywWI/AAAAAAAADjI/-NuYriJjIDQ/s1600/Logo%2BBank_Mega_Syariah.png', // url
+            //     origin: new google.maps.Point(0, 0), // origin
+            //     anchor: new google.maps.Point(70, 70), // anchor
+            //     scaledSize: new google.maps.Size(140, 110)
+            // }
+        }
+    }
+}
+</script>
+
+<style scoped>
+.about-container {
+    max-width: 100%;
+    margin: 70px;
+    padding-top: 50px;
+}
+
+.contact-info {
+    padding-right: 30px
+}
+
+.text-info-header {
+    color: black;
+    font-size: 35px;
+    font-weight: bold;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    line-height: 35px
+}
+
+.text-info {
+    font-size: 15px;
+    font-weight: bold;
+    padding: 5px;
+    color: #757575;
+}
+
+.icon-info {
+    padding: 5px;
+    margin-top: 7px;
+    margin-bottom: 7px;
+    margin-right: 7px;
+}
+
+.style-info {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.style-link {
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: bold;
+    padding: 5px;
+    color: black;
+}
+
+.layout-icon-link {
+    padding-top: 20px;
+    padding-left: 10px
+}
+
+.icon-link {
+    margin-right: 7px;
+    color: #424242;
+}
+
+.fade-animation {
+    -webkit-animation: fadein 1s;
+}
+
+@-webkit-keyframes fadein {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+</style>

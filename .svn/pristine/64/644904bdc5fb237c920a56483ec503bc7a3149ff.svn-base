@@ -1,0 +1,52 @@
+<template>
+    <div>
+
+        <v-tabs dark>
+            <v-tabs-bar class="cyan">
+                <v-tabs-item :href="'#transaction' " ripple>
+                    Transaction
+                </v-tabs-item>
+                <v-tabs-item :href="'#transfer' " ripple>
+                    Transfer
+                </v-tabs-item>
+                <v-tabs-slider class="yellow"></v-tabs-slider>
+            </v-tabs-bar>
+            <v-tabs-items>
+                <v-tabs-content :id="'transaction'">
+                    <transaction-list :isAdmin="false" :listTransactions="userHistoryTransaction">
+                    </transaction-list>
+                </v-tabs-content>
+                <v-tabs-content :id="'transfer'">
+                    <transfer-list :userEmail="user.email" :transferList="userHistoryTransfer">
+                    </transfer-list>
+                </v-tabs-content>
+            </v-tabs-items>
+        </v-tabs>
+    </div>
+</template>
+
+<script>
+import { mapGetters, mapActions } from 'vuex'
+import TransactionList from '../../../components/TransactionList'
+import TransferList from '../../../components/Invest/History/TransferList'
+export default {
+    components: {
+        TransactionList,
+        TransferList
+    },
+    computed: {
+        ...mapGetters(['userHistoryTransaction', 'userHistoryTransfer', 'user'])
+    },
+    methods: {
+        ...mapActions(['getUserHistoryTransaction', 'getUserHistoryTransfer'])
+    },
+    mounted() {
+        this.getUserHistoryTransaction({ idUser: this.user.id })
+        this.getUserHistoryTransfer({ emailSender: this.user.email })
+    }
+}
+</script>
+
+<style scoped>
+
+</style>

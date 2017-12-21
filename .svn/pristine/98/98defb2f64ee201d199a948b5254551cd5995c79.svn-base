@@ -1,0 +1,97 @@
+<template>
+    <div class="pf-container">
+        <h2 class="body-3 green--text">User Profile</h2>
+        <v-divider></v-divider>
+        <div style="max-width: 500px; width: 100%; margin: 10px;">
+            <h2 class="body-2 green--text" style="margin: 0; padding: 0">Username</h2>
+            <v-text-field style="margin: 0; padding: 0" v-model="userInfo.username" disabled></v-text-field>
+
+            <h2 class="body-2 green--text" style="margin: 0; padding: 0">Email Address</h2>
+            <v-text-field style="margin: 0; padding: 0" v-model="userInfo.email" disabled></v-text-field>
+
+            <h2 class="body-2 green--text" style="margin: 0; padding: 0">Full Name</h2>
+            <v-text-field style="margin: 0; padding: 0" v-model="userInfo.fullname"></v-text-field>
+
+            <h2 class="body-2 green--text" style="margin: 0; padding: 0">E-wallet</h2>
+            <v-text-field style="margin: 0; padding: 0" v-model="userInfo.eWallet"></v-text-field>
+
+            <h2 class="body-2 green--text" style="margin: 0; padding: 0">Identification/Passport Card</h2>
+            <v-text-field style="margin: 0; padding: 0" v-model="userInfo.idpc"></v-text-field>
+
+            <!-- <h2 class="body-2 green--text" style="margin: 0; padding: 0">Birthday {{userInfo.birthday}}</h2>
+            <v-text-field style="margin: 0; padding: 0" v-model="userInfo.birthday"></v-text-field> -->
+
+            <h2 class="body-2 green--text" style="margin: 0; padding: 0">Country:
+                <span class="black--text">now is {{_user.country}}</span>
+            </h2>
+            <country-select :country="userInfo.country" @onChangeCountry="userInfo.country = $event"></country-select>
+
+            <!-- <h2 class="body-2 green--text" style="margin: 0; padding: 0">Address</h2>
+            <v-text-field style="margin: 0; padding: 0" v-model="userInfo.address"></v-text-field> -->
+
+            <h2 class="body-2 green--text" style="margin: 0; padding: 0">Phone Number</h2>
+            <v-text-field style="margin: 0; padding: 0" v-model="userInfo.phone"></v-text-field>
+            <p class="green--text" v-if="updateStatus.type === true && updateStatus.message.length>0">{{updateStatus.message}}</p>
+            <p class="red--text" v-if="updateStatus.type === false && updateStatus.message.length>0">{{updateStatus.message}}</p>
+            <v-btn :loading="_isUpdating" class="green white--text" @click="requestUpdateUser">Submit</v-btn>
+        </div>
+    </div>
+</template>
+
+<script>
+import CountrySelect from '../../../Auth/CountrySelect'
+export default {
+    name: 'profile-tab',
+    components: {
+        CountrySelect
+    },
+    props: {
+        user: Object,
+        updateUser: Function,
+        isUpdating: Boolean,
+        updateStatus: Object
+    },
+    computed: {
+        _user() {
+            return this.user
+        },
+        _isUpdating() {
+            return this.isUpdating
+        },
+        _updateStatus() {
+            return this.updateStatus
+        }
+    },
+    methods: {
+        requestUpdateUser(e) {
+           this.updateUser(this.userInfo)
+        }
+    },
+    mounted() {
+        this.userInfo = this._user
+    },
+    data() {
+        return {
+            userInfo: {
+                // email: 'dasd',
+                // fullname: 'Nguyễn Văn Hoài Nam',
+                // idpc: null,
+                // birthday: '1970-01-01',
+                // country: 'Viet Nam',
+                // // address: '',
+                // phone: 1201293
+            }
+        }
+    },
+}
+</script>
+
+<style scoped>
+.pf-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+}
+</style>

@@ -1,0 +1,28 @@
+<template>
+    <div style="display: flex; flex-direction: row; flex-wrap: wrap;">
+        <deposite-box v-for="item in _depositeListData" :key="item.id" :pv="item.pv" :lai="item.lai" :chuky="item.chuky"></deposite-box>
+    </div>
+</template>
+
+<script>
+const DepositeBox = () => import('../DepositeBox')
+
+export default {
+    name: 'deposite-list',
+    props: {
+        depositeListData: Array
+    },
+    components: {
+        DepositeBox
+    },
+    computed: {
+        _depositeListData() {
+            return this.depositeListData
+        }
+    }
+}
+</script>
+
+<style scoped>
+
+</style>

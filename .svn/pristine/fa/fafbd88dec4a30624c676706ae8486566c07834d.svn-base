@@ -1,0 +1,28 @@
+<template>
+    <v-container class="indigo lighten-1 container">
+        <register-form :isRequesting="formRegister.isRequesting"></register-form>
+
+    </v-container>
+</template>
+
+<script>
+import { mapActions, mapGetters } from 'vuex'
+
+import RegisterForm from '../../components/Auth/RegisterForm'
+
+export default {
+    name: 'registerpage',
+    components: { RegisterForm },
+    computed: {
+        ...mapGetters(['formRegister'])
+    }
+}
+</script>
+
+<style scoped>
+.container {
+    max-width: 100%;
+    width: 100%;
+    padding: 0;
+}
+</style>

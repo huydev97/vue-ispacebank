@@ -1,0 +1,81 @@
+<template>
+    <div class="pb-wrapper">
+        <div class="pb-avatar-wrapper">
+            <img class="pb-avatar" src="../../../../assets/images/logo-ispace-1.png" alt="Avatar" />
+            <v-divider></v-divider>
+            <h2 class="body-1" style="width: 100%; text-align:center;">{{_user.username}}</h2>
+        </div>
+        <div class="pb-box">
+            <label class="body-2 grey--text" style="margin: 0px;">FULLNANE:
+                <label class="body-2 black--text">{{_user.fullname}}</label>
+            </label> <br />
+            <label class="body-2 grey--text" style="margin: 0px;">EMAIL:
+                <label class="body-2 black--text">{{_user.email}}</label>
+            </label><br />
+            <label class="body-2 grey--text" style="margin: 0px;">REGISTER DAY:
+                <label class="body-2 black--text">{{_user.createdAt}}</label>
+            </label>
+            <div>
+                <v-btn small success style="margin-left: 0">PROFILE</v-btn>
+                <v-btn small success style="margin-left: 0">CHANGE PASSWORD</v-btn>
+                <v-btn small success style="margin-left: 0">E-WALLET</v-btn>
+            </div>
+            <v-divider></v-divider>
+            <affiliate-link-box :username="_user.username"></affiliate-link-box>
+        </div>
+
+    </div>
+</template>
+
+<script>
+const AffiliateLinkBox = () => import('../../AffilateLinkBox')
+
+export default {
+    name: 'profile-box',
+    props: {
+        user: Object
+    },
+    components: {
+        AffiliateLinkBox
+    },
+    methods: {
+        copyLink() {
+
+        }
+    },
+    computed: {
+        _user() {
+            return this.user
+        }
+    }
+}
+</script>
+
+<style scoped>
+.pb-wrapper {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    margin: 20px;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: white;
+}
+
+.pb-avatar-wrapper {
+    flex: 1;
+    margin: 10px;
+}
+
+.pb-avatar {
+    width: 100%;
+}
+
+.pb-box {
+    flex: 8;
+    margin-left: 1%;
+    min-width: 250px;
+}
+</style>

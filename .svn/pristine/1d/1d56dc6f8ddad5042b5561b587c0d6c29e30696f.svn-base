@@ -1,0 +1,60 @@
+<template>
+  <v-app class="app" id="app">
+    <header-app />
+    <navigation />
+
+    <router-view style="padding: 0;"></router-view>
+
+    <footer-app></footer-app>
+
+  </v-app>
+</template>
+
+<script>
+import { mapActions } from 'vuex'
+
+const Navigation = () => import('./containers/Navigation')
+const HeaderApp = () => import('./containers/Header')
+const FooterApp = () => import('./containers/Footer')
+export default {
+  name: 'app',
+  components: {
+    Navigation,
+    HeaderApp,
+    FooterApp
+  },
+  methods: {
+    ...mapActions(['isAuthenticated'])
+  },
+  created() {
+    this.isAuthenticated()
+  },
+}
+</script>
+
+<style>
+#app {
+  padding: 0px;
+  margin: 0px;
+  display: flex;
+  flex-direction: column;
+  background-color: #E9EBEE;
+}
+
+
+
+
+
+
+
+
+
+
+/*reset css */
+
+* {
+  padding: 0px;
+  margin: 0px;
+  border: none;
+}
+</style>

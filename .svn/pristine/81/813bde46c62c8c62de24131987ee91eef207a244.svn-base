@@ -1,0 +1,78 @@
+<template>
+    <div class="os-box-content" style="cursor: pointer" @mouseover="toggleHover()" @mouseout="toggleHover()">
+        <v-btn flat fab dark large :class="buttonClass" style="margin: 10px; transition: all 0.5s;">
+            <i :class="['fa', icon, 'fa-3x', isHover ? 'white--text' : 'indigo--text' ]" aria-hidden="true"></i>
+        </v-btn>
+        <div class="os-box-wrap">
+            <h5 class="os-box-title">{{title}}</h5>
+            <p class="os-box-content-text">
+                {{content}}
+            </p>
+        </div>
+    </div>
+</template>
+
+<script>
+export default {
+    name: 'service-box',
+    props: {
+        title: String,
+        icon: String,
+        content: String,
+    },
+    data() {
+        return {
+            isHover: false,
+
+        }
+    },
+    computed: {
+        buttonClass() {
+            return [this.isHover ? 'indigo' : 'grey', this.isHover ? 'lighten-1' : 'lighten-4',]
+        }
+    },
+    methods: {
+        toggleHover() {
+            this.isHover = !this.isHover
+        }
+    }
+}
+</script>
+
+<style scoped>
+.os-box {
+    width: 360px;
+    margin: 20px;
+}
+
+.os-box-content {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 360px;
+}
+
+.os-box-content {
+    margin: 10px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.os-box-wrap {
+    flex: 1;
+    padding: 10px;
+    text-align: left;
+}
+
+.os-box-title {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 23px;
+    transition: all .25s;
+}
+
+.os-box-content-text {
+    color: #777;
+}
+</style>

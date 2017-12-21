@@ -1,0 +1,176 @@
+import * as types from './mutation-types'
+import axios from 'axios'
+import VueCoookie from 'vue-cookie'
+import router from '../../../router'
+import config from '../../../../config/index'
+export default {
+    /* function đăng nhập
+      login({commit, state}, params 1) 
+      params 1: json object user infomation { username: , password}
+
+      reponse: {success, message, errQuery, infomation}
+    */
+    async login({ dispatch, commit, state }, userForm) {
+        try {
+            await commit(types.LOGIN_REQUEST)
+
+            let results = await axios({
+                method: 'POST',
+                url: '/api/user/login',
+                data: {
+                    email: userForm.username,
+                    password: userForm.password
+                },
+                timeout: 5000
+            })
+            let { success, message, errQuery, user } = await results.data;
+
+            if (success) {
+                await commit(types.LOGIN_SUCCESS, user)
+                await VueCoookie.set('login_token', user.token, {
+                    expires: 7
+                })
+                await dispatch('getUserBagBitcoin', user.id)
+                router.replace('/investment')
+                return true
+            } else {
+                await commit(types.LOGIN_FAIL, { errorMessage: message })
+                return false
+            }
+
+        } catch (error) {
+            console.log('Error: ', error)
+            await commit(types.LOGIN_FAIL, { errorMessage: error.message })
+            return false
+        }
+    },
+    /*
+        function Đăng xuất
+
+    */
+    async logout({ commit, state }) {
+        try {
+            router.replace('/login')
+            await VueCoookie.delete('login_token')
+            await commit(types.LOGOUT)
+        } catch (error) {
+            console.log('Error: ', error)
+        }
+    },
+    /*
+        function đăng ký
+        register({commiet, state}, params1)
+        params1: user infomation object {
+            username,
+            password,
+            email,
+            mobile_phone,
+            country
+        }
+    */
+    async register({ commit, state }, userForm) {
+        try {
+            await commit(types.REGISTER_REQUEST)
+
+            let results = await axios({
+                method: 'POST',
+                url: '/api/user/create',
+                data: {
+                    username: userForm.username,
+                    password: userForm.password,
+                    email: userForm.email,
+                    phone: userForm.phone,
+                    country: userForm.country
+                },
+                timeout: 5000
+            })
+            let { success, message } = await results.data;
+
+            if (success) {
+                await commit(types.REGISTER_SUCCESS)
+                return true
+            } else {
+                await commit(types.REGISTER_FAIL, { errorMessage: message })
+                return false
+            }
+
+        } catch (err) {
+            console.log(err)
+            await commit(types.REGISTER_FAIL, { errorMessage: err.message })
+        }
+
+    },
+    /*Update user*/
+    async updateUser({ commit, state }, userinfo) {
+        await commit(types.REQUEST_UPDATE)
+        let results = await axios({
+            method: 'PUT',
+            url: '/api/user/updateUser',
+            data: {
+                conditions: { id: userinfo.id },
+                fullname: userinfo.fullname,
+                country: userinfo.country,
+                phone: userinfo.phone,
+                eWallet: userinfo.eWallet
+            },
+            timeout: 5000
+        })
+        let { success, message, errQuery, user } = await results.data
+        if (success) {
+            await commit(types.STOP_REQUEST_UPDATE, { type: success, message: 'Update success' })
+        } else {
+
+            await commit(types.STOP_REQUEST_UPDATE, { type: success, message: 'Update fail' })
+        }
+    },
+    async updatePassword({ commit, state }, info) {
+        let results = await axios({
+            method: 'PUT',
+            url: '/api/user/updatePasswordUser',
+            data: {
+                conditions: { id: info.idUser, oldPassword: info.oldPassword },
+                newPassword: info.newPassword
+            },
+            timeout: 5000
+        })
+        let { success, message, errQuery, user } = await results.data
+        if (success) {
+            if (success) {
+                await commit(types.STOP_REQUEST_UPDATE, { type: success, message: 'Update success' })
+            } else {
+
+                await commit(types.STOP_REQUEST_UPDATE, { type: success, message: 'Update fail' })
+            }
+            router.replace('/login')
+            await VueCoookie.delete('login_token')
+            await commit(types.LOGOUT)
+        }
+    },
+    /*kiểm tra lưu đăng nhập */
+    async checkAuth({ dispatch, commit, state }) {
+        try {
+            let token = VueCoookie.get('login_token')
+
+            if (token && token.length > 0) {
+
+                let results = await axios({
+                    method: 'POST',
+                    url: '/api/user/login',
+                    data: {
+                        login_token: token
+                    },
+                    timeout: 5000
+                })
+                let { success, message, errQuery, user } = await results.data
+
+                if (success) {
+                    await commit(types.LOGIN_SUCCESS, user)
+                    await dispatch('getUserBagBitcoin', user.id)
+                }
+            }
+        } catch (error) {
+            console.log('Error: ', error)
+        }
+    }
+}
+

@@ -1,0 +1,103 @@
+<template>
+    <div class="container">
+        <div>
+            <h3 class="headline" style="margin: 0; padding: 0">
+                <label class="blue--text">#{{_id}}</label> {{_title}}</h3>
+            <p class="subtitle" style="margin: 0; padding: 0">{{_conent}}</p>
+            <p>{{_createdAt}}</p>
+
+        </div>
+
+        <!-- admin button -->
+        <div v-show="_isAdmin" style="display: flex; flex-direction: row; align-items: center;">
+            <!-- <v-select @change="toggleSave" style="max-width: 150px;" :items="types" v-model="sl" :label="_state" item-value="dislay" item-text="display"></v-select> -->
+            <!-- <p class="body-3 red--text" v-if="error.length > 0" style="margin: 0; padding: 0">*{{error}}</p> -->
+            <v-btn success :loading="isRequesting" @click.stop="onClickProcess" :disabled="isRequesting">Process</v-btn>
+            <v-btn success :loading="isRequesting" @click.stop="onClickCancel" :disabled="isRequesting">Cancel</v-btn>
+        </div>
+        <!-- user buttun -->
+        <div v-show="!_isAdmin" style="display: flex; flex-direction: row; align-items: center;">
+            <p :class="getStatus().color+'--text body-2'">Status: {{getStatus().title}}</p>
+            <!-- <v-btn success :loading="isRequesting" @click.stop="onClickProcess">Đã Xử lý</v-btn> -->
+        </div>
+        <v-divider></v-divider>
+    </div>
+</template>
+
+<script>
+export default {
+    props: {
+        id: Number,
+        index: Number,
+        title: String,
+        content: String,
+        createdAt: String,
+        isAdmin: Boolean,
+        state: Number,
+        processTransaction: Function,
+        cancelTransaction: Function
+    },
+    data() {
+        return {
+            sl: null,
+            isRequesting: false
+        }
+    },
+    computed: {
+        _title() {
+            return this.title
+        },
+        _conent() {
+            return this.content
+        },
+        _createdAt() {
+            return this.createdAt
+        },
+        _isAdmin() {
+            return this.isAdmin
+        },
+        _state() {
+            return this.state
+        },
+        _id() {
+            return this.id
+        }
+    },
+    methods: {
+        getStatus() {
+            switch (this._state) {
+                case 0:
+                    return { title: 'Wait...', color: 'blue' }
+                case 1:
+                    return { title: 'Success', color: 'green' }
+                case 2:
+                    return { title: 'Canceled', color: 'red' }
+                default:
+                    return { title: 'Un-Know', color: 'white' }
+            }
+        },
+        async onClickProcess(e) {
+            this.isRequesting = true
+            let res = await this.processTransaction({
+                id: this.id,
+                index: this.index
+            })
+            this.isRequesting = false
+        },
+        async onClickCancel(e) {
+            this.isRequesting = true
+            let res = await this.cancelTransaction({
+                id: this.id,
+                index: this.index
+            })
+            this.isRequesting = false
+        }
+    }
+}
+</script>
+
+<style scoped>
+.container {
+    min-width: 300px;
+}
+</style>

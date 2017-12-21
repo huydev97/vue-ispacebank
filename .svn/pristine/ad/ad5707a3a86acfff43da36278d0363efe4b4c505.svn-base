@@ -1,0 +1,107 @@
+import * as types from './mutation-types'
+import axios from 'axios'
+import VueCoookie from 'vue-cookie'
+
+export default {
+
+    /* function đăng nhập
+      login({commit, state}, params 1) 
+      params 1: json object user infomation { username: , password}
+
+      reponse: {success, message, errQuery, infomation}
+    */
+    async login({ commit, state }, userForm) {
+        try {
+            await commit(types.LOGIN_REQUEST)
+
+            let results = await axios.post('http://192.168.2.110:1337/user/login', {
+                email: userForm.username,
+                password: userForm.password
+            })
+
+            let { success, message, errQuery, user } = await results.data;
+            console.log(JSON.stringify(user))
+            if (success) {
+                await commit(types.LOGIN_SUCCESS, user)
+                await VueCoookie.set('login_token', user.token, {
+                    expires: 7
+                })
+                return true
+            } else {
+                await commit(types.LOGIN_FAIL, { errorMessage: message })
+                return false
+            }
+
+        } catch (error) {
+            console.log('Error: ', error)
+            await commit(types.LOGIN_FAIL, { errorMessage: error.message })
+            return false
+        }
+    },
+    /*
+        function Đăng xuất
+
+    */
+    async logout({ commit, state }) {
+        try {
+            await VueCoookie.delete('login_token')
+            await commit(types.LOGOUT)
+        } catch (error) {
+            console.log('Error: ', error)
+        }
+    },
+    /*
+        function đăng ký
+        register({commiet, state}, params1)
+        params1: user infomation object {
+            username,
+            password,
+            email,
+            mobile_phone,
+            country
+        }
+    */
+    async register({ commit, state }, userForm) {
+        try {
+            await commit(types.REGISTER_REQUEST)
+            let results = await axios.post('http://192.168.2.110:1337/user/create', {
+                username: userForm.username,
+                password: userForm.password,
+                email: userForm.email,
+                phone: userForm.phone,
+                country: userForm.country
+            })
+            let { success, message } = await results.data;
+            if (success) {
+                await commit(types.REGISTER_SUCCESS)
+                return true
+            } else {
+                await commit(types.REGISTER_FAIL, { errorMessage: message })
+                return false
+            }
+        } catch (err) {
+            console.log(err)
+            await commit(types.REGISTER_FAIL, { errorMessage: err.message })
+        }
+
+    },
+
+    async isAuthenticated({ commit, state }) {
+        try {
+            let token = VueCoookie.get('login_token')
+            if (token && token.length > 0) {
+                let results = await axios.post('http://192.168.2.110:1337/user/login', {})
+                let { success, message, errQuery, user } = await results.data
+
+                if (success) {
+                    await commit(types.LOGIN_SUCCESS, user)
+                } else {
+                    VueCoookie.delete('login_token')
+                }
+            }
+        } catch (error) {
+            console.log('Error: ', error)
+        }
+    }
+}
+

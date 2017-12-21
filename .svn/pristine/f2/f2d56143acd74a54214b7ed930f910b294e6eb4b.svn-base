@@ -1,0 +1,6 @@
+export default {
+    userBagBitcoin: state => state.userBagBitcoin,
+    userHistoryTransaction: state => state.userHistoryTransaction,
+    userHistoryTransfer: state => state.userHistoryTransfer,
+    bitcoinPrice: state => state.bitcoinPrice
+}

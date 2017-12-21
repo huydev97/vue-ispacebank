@@ -1,0 +1,76 @@
+/**
+ * BagbitcoinController
+ *
+ * @description :: Server-side logic for managing bagbitcoins
+ * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
+ */
+/*
+  Code Caculate interest
+*/
+
+module.exports = {
+	// CRUD USER
+    /** 
+     *  Function : Create a new bag bitcoin
+     *  Method : POST
+     *  Inputs : id_user , investment
+     */
+    create: async (req, res, next) => {
+        if (req.method != 'POST')
+            return res.json({ success: false, message: 'Something is wrong at router\'\s method.' });
+        if (!req.body.id_user || !req.body.investment || req.body.id_user == '' || req.body.investment == '')
+            return res.json({ success: false, message: 'Please enter full information.' });
+        Bagbitcoin.create({
+            id_user : req.body.id_user,
+            investment : req.body.investment,
+        }).exec((err, bagbitcoin) => {
+            if(err)
+                res.json({ success: false, message: 'Failed to c reate new bag bitcoin!.', errQuery : err});
+            else
+                res.json({ success: true, message: 'Created a bag bitcoin!. id: #'+bagbitcoin.id});
+        });
+    },
+
+    /** 
+     *  Function : Update bag bitcoin in database
+     *  Method : PUT
+     *  Inputs : id_bagbitcoin and Object informations need to update
+     */
+    update: async (req, res, next) => {
+        if (req.method != 'PUT')
+            return res.json({ success: false, message: 'Something is wrong at router\'\s method.' });
+        if (!req.body.id_bagbitcoin || !req.body.infoUpdate)
+            return res.json({ success: false, message: 'You need send me a id_bagbitcoin and a Object about information need to update(infoUpdate: { some attributes }) to use this route.' });
+        Bagbitcoin.update(req.body.id_bagbitcoin, req.body.infoUpdate, (err, updated) => {
+            if (err)
+                return res.json({ success: false, message: 'Error about query, please try again!', errQuery: err });
+            if (updated.length <= 0)
+                res.json({ success: false, message: 'Can\'t find Bag Bitcoin to update!!' });
+            else
+                res.json({ success: true, message: 'Updated Bag Bitcoin id : #' + updated[0].id });
+        });
+    },
+
+    /** 
+     *  Function : Delete bag bitcoin in database
+     *  Method : DELETE
+     *  Inputs : An id_bagbitcoin to delete
+     */
+    delete: async (req, res, next) => { // Delete user by Object conditions
+        if (req.method != 'DELETE')
+            return res.json({ success: false, message: 'Something is wrong at router\'\s method.' });
+        if (!req.body.conditions)
+            return res.json({ success: false, message: 'You need send me a Object about conditions to use this route.' });
+        Bagbitcoin.destroy({
+            id : req.body.id_bagbitcoin
+        }).exec((err, deleted) => {
+            if (err)
+                return res.json({ success: false, message: 'Error about query, please try again!', errQuery: err });
+            if (deleted.length <= 0)
+                res.json({ success: false, message: 'Can\'t find bag bitcoin to delete!!' });
+            else
+                res.json({ success: true, message: 'Deleted bag bitcoin id : #' + deleted[0].id });
+        });
+    },
+};
+

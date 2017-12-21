@@ -1,0 +1,33 @@
+import Vue from 'vue'
+import Router from 'vue-router'
+
+import HomePage from '@/containers/HomePage'
+import LoginPage from '@/containers/LoginPage'
+import RegisterPage from '@/containers/RegisterPage'
+Vue.use(Router)
+
+export default new Router({
+  mode: 'history',
+  routes: [
+    {
+      path: '/',
+      name: 'home',
+      component: HomePage
+    },
+    {
+      path: '/services',
+      name: 'services',
+      component: HomePage
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: LoginPage
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: RegisterPage
+    }
+  ]
+})

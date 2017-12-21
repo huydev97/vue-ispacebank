@@ -1,0 +1,292 @@
+/**
+ * BagbitcoinController
+ *
+ * @description :: Server-side logic for managing bagbitcoins
+ * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
+ */
+/*
+  Code Caculate interest
+*/
+
+module.exports = {
+    // CRUD USER
+    /** 
+     *  Function : Create a new bag bitcoin
+     *  Method : POST
+     *  Inputs : id_user , investment
+     */
+    create: async (req, res, next) => {
+        if (req.method != 'POST')
+            return res.json({ success: false, message: 'Something is wrong at router\'\s method.' });
+        if (!req.body.id_user || !req.body.investment || req.body.id_user == '' || req.body.investment == '')
+            return res.json({ success: false, message: 'Please enter full information.' });
+        Bagbitcoin.create({
+            id_user: req.body.id_user,
+            investment: req.body.investment,
+        }).exec((err, bagbitcoin) => {
+            if (err)
+                res.json({ success: false, message: 'Failed to c reate new bag bitcoin!.', errQuery: err });
+            else
+                res.json({ success: true, message: 'Created a bag bitcoin!. id: #' + bagbitcoin.id });
+        });
+    },
+    /** 
+         *  Function : Read a bagbitcoin in database
+         *  Method : POST
+         *  Inputs : idUser
+         */
+    read: async (req, res, next) => {
+        if (req.method != 'POST')
+            return res.json({ success: false, message: 'Something is wrong at router\'\s method.' });
+        if (!req.body.idUser || req.body.idUser == '')
+            return res.json({ success: false, message: 'You need send me idUser to use this route.' });
+        Bagbitcoin.findOne({
+            id_user: req.body.idUser,
+        }).exec((err, user) => {
+            if (err)
+                return res.json({ success: false, message: 'Error about query, please try again!', errQuery: err });
+            if (!user)
+                res.json({ success: false, message: 'Can\'t find bagbitcoin to show!!' });
+            else
+                res.json({ success: true, message: 'Load information bag bitcoin success!', users: user });
+        });
+    },
+    /** 
+     *  Function : Update bag bitcoin in database
+     *  Method : PUT
+     *  Inputs : id_bagbitcoin and Object informations need to update
+     */
+    update: async (req, res, next) => {
+        if (req.method != 'PUT')
+            return res.json({ success: false, message: 'Something is wrong at router\'\s method.' });
+        if (!req.body.id_bagbitcoin || !req.body.infoUpdate)
+            return res.json({ success: false, message: 'You need send me a id_bagbitcoin and a Object about information need to update(infoUpdate: { some attributes }) to use this route.' });
+        Bagbitcoin.update({ id: req.body.id_bagbitcoin }, req.body.infoUpdate, (err, updated) => {
+            if (err)
+                return res.json({ success: false, message: 'Error about query, please try again!', errQuery: err });
+            if (updated.length <= 0)
+                res.json({ success: false, message: 'Can\'t find Bag Bitcoin to update!!' });
+            else
+                res.json({ success: true, message: 'Updated Bag Bitcoin id : #' + updated[0].id });
+        });
+    },
+
+    /** 
+     *  Function : Delete bag bitcoin in database
+     *  Method : DELETE
+     *  Inputs : An id_bagbitcoin to delete
+     */
+    delete: async (req, res, next) => { // Delete user by Object conditions
+        if (req.method != 'DELETE')
+            return res.json({ success: false, message: 'Something is wrong at router\'\s method.' });
+        if (!req.body.conditions)
+            return res.json({ success: false, message: 'You need send me a Object about conditions to use this route.' });
+        Bagbitcoin.destroy({
+            id: req.body.id_bagbitcoin
+        }).exec((err, deleted) => {
+            if (err)
+                return res.json({ success: false, message: 'Error about query, please try again!', errQuery: err });
+            if (deleted.length <= 0)
+                res.json({ success: false, message: 'Can\'t find bag bitcoin to delete!!' });
+            else
+                res.json({ success: true, message: 'Deleted bag bitcoin id : #' + deleted[0].id });
+        });
+    },
+
+    /** 
+     *  Function : Set pv for moder or admin
+     *  Method : PUT
+     *  Inputs : An id_bagbitcoin, howPV
+     */
+    setPointForAdmin: async (req, res, next) => {
+        if (req.method != 'PUT')
+            return res.json({ success: false, message: 'Something is wrong at router\'\s method.' });
+        if (!req.body.id_bagbitcoin || !req.body.howPV)
+            return res.json({ success: false, message: 'You need send me a id_bagbitcoin and howPV to use this route.' });
+        let bag = await Bagbitcoin.find({ id: req.body.id_bagbitcoin });
+        if (bag.length <= 0)
+            return res.json({ success: false, message: 'Can\'t find Bag Bitcoin to update!!' });
+
+        let newPV = parseFloat(bag[0].balance_wallet) + parseFloat(req.body.howPV);
+        Bagbitcoin.update({ id: req.body.id_bagbitcoin }, { balance_wallet: newPV }, (err, updated) => {
+            if (err)
+                return res.json({ success: false, message: 'Error about query, please try again!', errQuery: err });
+            if (updated.length <= 0)
+                res.json({ success: false, message: 'Can\'t find Bag Bitcoin to update!!' });
+            else
+                res.json({ success: true, message: 'Updated Bag Bitcoin id : #' + updated[0].id });
+        });
+    },
+    /** 
+    *  Function : Transfer pv for moder or admin
+    *  Method : POST
+    *  Inputs : An usernameSend, usernameReceived, howPV
+    */
+    transfer: async (req, res, next) => {
+        let flg = 'Failed';
+        if (req.method != 'POST')
+            return res.json({ success: false, message: 'Something is wrong at router\'\s method.' });
+        if (!req.body.usernameSend || !req.body.usernameReceived || !req.body.howPV)
+            return res.json({ success: false, message: 'You need send me a username of sender, username of receiver and howPV to use this route.' });
+        if (req.body.usernameSend == req.body.usernameReceived)
+            return res.json({ success: false, message: 'Can not send PV back to the person who sent it!!' });
+        if (req.body.howPV <= 0)
+            return res.json({ success: false, message: 'Can not send PV is <= 0!!' });
+
+        let senderUser = await User.findOne({ username: req.body.usernameSend });
+        let receiverUser = await User.findOne({ username: req.body.usernameReceived });
+        if (!senderUser)
+            return res.json({ success: false, message: 'Failed! Not found sender in DB.' });
+        if (!receiverUser)
+            return res.json({ success: false, message: 'Failed! Not found receiver in DB.' });
+
+        let sender = await Bagbitcoin.findOne({ id_user: senderUser.id });
+        let receiver = await Bagbitcoin.findOne({ id_user: receiverUser.id });
+        if (!sender)
+            return res.json({ success: false, message: 'Failed! Not found bag of sender in DB.' });
+        if (!receiver)
+            return res.json({ success: false, message: 'Failed! Not found bag of receiver in DB.' });
+        if (sender.balance_wallet < req.body.howPV)
+            return res.json({ success: false, message: 'Failed! Sender not enough ' + req.body.howPV + 'PV to send.' });
+        let newPvSender = parseFloat(sender.balance_wallet) - parseFloat(req.body.howPV);
+        let newPvReceiver = parseFloat(receiver.balance_wallet) + parseFloat(req.body.howPV);
+        Bagbitcoin.update({ id_user: senderUser.id }, { balance_wallet: newPvSender }, (err, updated) => {
+            if (err)
+                return res.json({ success: false, message: 'Failed to transfer PV!(Take PV)', errQuery: err });
+            else {
+                Bagbitcoin.update({ id_user: receiverUser.id }, { balance_wallet: newPvReceiver }, (err, updated) => {
+
+                    if (err)
+                        return res.json({ success: false, message: 'Failed to transfer PV!(Add PV)', errQuery: err });
+                    else {
+                        flg = 'Success'
+                        res.json({ success: true, message: 'Success to transfer PV' });
+                    }
+                    Transaction.create({
+                        id_user: senderUser.id,
+                        type: 2,
+                        state : 1,
+                        package: req.body.howPV,
+                        sender: senderUser.username,
+                        note: receiverUser.username
+                    }).exec((err, his) => {
+                        if (err)
+                            console.log('Failed history transfer. ' + err);
+                        else
+                            console.log('Created history transfer');
+                    });
+                });
+            }
+        });
+    },
+
+    /** 
+    *  Function : Create Investment
+    *  Method : POST
+    *  Inputs : An username, package
+    */
+    investment: async (req, res, next) => {
+        if (req.method != 'POST')
+            return res.json({ success: false, message: 'Something is wrong at router\'\s method.' });
+        if (!req.body.username || !req.body.package || req.body.username == '' || req.body.package == '')
+            return res.json({ success: false, message: 'You need send me a idUser, package to use this route.' });
+        let user = await User.findOne({ username: req.body.username });
+        let bag = await Bagbitcoin.findOne({ id_user: user.id });
+        if (!bag)
+            return res.json({ success: false, message: 'Failed to invest! Not found bag of user in DB.' });
+        if (bag.investment >= req.body.package)
+            return res.json({ success: false, message: 'Failed to invest! You can only make a package is more than your current package.' });
+        if (bag.balance_wallet < (parseFloat(req.body.package) - bag.investment))
+            return res.json({ success: false, message: 'Failed to invest! You do not have enough pv to make this package.' });
+        let newWallet = parseFloat(bag.balance_wallet) - (parseFloat(req.body.package) - parseFloat(bag.investment));
+        let package = await Package.findOne({ package: req.body.package });
+        Bagbitcoin.update({ id_user: user.id }, {
+            balance_wallet: newWallet,
+            investment: package.package,
+            interest_percent: package.interest_percent
+        }, async (err, updated) => {
+            if (err)
+                return res.json({ success: false, message: 'Failed to invest!', errQuery: err });
+            else {
+                let userRef = await User.findOne({ username: user.referrer });
+                let bagRef = await Bagbitcoin.findOne({ id_user: userRef.id });
+                if (userRef) {
+                    let newWalletRef = parseFloat(bagRef.balance_wallet) + parseFloat((req.body.package - bag.investment)) * 0.05;
+                    let pvReceived = parseFloat((parseFloat(req.body.package) - parseFloat(bag.investment)) * 0.05);
+                    Bagbitcoin.update({ id_user: userRef.id }, {
+                        balance_wallet: newWalletRef,
+                    }).exec((err, updatedRef) => {
+                        Historyinterestreceived.create({
+                            id_user: userRef.id, interset_received: 0, pv_received: pvReceived,
+                            note: 'Type : Bonus for referrer. Noti:' + (err || 'Success'),
+                        }).exec((err, history) => {
+                            if (!history)
+                                console.log('Failed to create history for user : #' + user.username + '. ' + err);
+                        }); // Save history received interest
+                    });
+                }
+                res.json({ success: true, message: 'Success to invest.' });
+            }
+
+        });
+    },
+
+    /**
+    *  Function : Action + -
+    *  Method : POST
+    *  Inputs : usernameReceiver, typeDo, howPV
+    */
+    pvAction: async (req, res, next) => {
+        if (req.method != 'POST')
+            return res.json({ success: false, message: 'Something is wrong at router\'\s method.' });
+        if (!req.body.usernameReceiver || !req.body.typeDo || !req.body.howPV || req.body.usernameReceiver == '' || req.body.typeDo == '' || req.body.howPV == '')
+            return res.json({ success: false, message: 'You need send me a usernameReceiver, typeDo and howPV to use this route.' });
+        let user = await User.findOne({ username: req.body.usernameReceiver });
+        if (!user)
+            return res.json({ success: false, message: 'Not found user in DB.' });
+        let newWallet;
+        Bagbitcoin.findOne({ id_user: user.id }).exec((err, bag) => {
+            if (err)
+                return res.json({ success: false, message: 'Failed to pvAction!', errQuery: err });
+            if (!bag)
+                return res.json({ success: false, message: 'Not found the bag of user!' });
+            if (req.body.typeDo === '-' && bag.balance_wallet < req.body.howPV)
+                return res.json({ success: false, message: 'That user not enough PV to subtraction !' });
+
+            if (req.body.typeDo === '+')
+                newWallet = parseFloat(bag.balance_wallet) + parseFloat(req.body.howPV);
+            else
+                newWallet = parseFloat(bag.balance_wallet) - parseFloat(req.body.howPV);
+
+            Bagbitcoin.update({ id: bag.id }, { balance_wallet: newWallet }, (err, updated) => {
+                if (err)
+                    return res.json({ success: false, message: 'Failed to update new balance_wallet!', errQuery: err });
+                if (updated.length <= 0)
+                    return res.json({ success: false, message: 'Not found the bag of user!' });
+                res.json({ success: true, message: 'Updated balance_wallet of username ' + user.username });
+            })
+        });
+    },
+
+    /**
+    *  Function :  GEt History Interest Of User
+    *  Method : POST
+    *  Inputs : idUser
+    */
+    getHistoryMyInterests: async (req, res, next) => {
+        if (req.method != 'POST')
+            return res.json({ success: false, message: 'Something is wrong at router\'\s method.' });
+        if (!req.body.idUser || req.body.idUser == '')
+            return res.json({ success: false, message: 'You need send me idUser to use this route.' });
+        Historyinterestreceived.find({ id_user: req.body.idUser }).exec((err, historys) => {
+            if (err)
+                return res.json({ success: false, message: 'Error about query, please try again!', errQuery: err });
+            if (!historys)
+                res.json({ success: false, message: 'Failed to get list historys interest .' });
+            else
+                res.json({ success: true, message: 'Success to get list historys interest !', historys: historys });
+        });
+    },
+
+
+}

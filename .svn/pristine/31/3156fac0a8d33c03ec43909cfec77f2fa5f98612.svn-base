@@ -1,0 +1,195 @@
+<template>
+    <v-container>
+        <v-layout column>
+            <v-list style="padding: 0px; border: 1px solid #e0e0e0;">
+                <v-flex>
+                    <v-list-tile 
+                        avatar v-for="item in items" 
+                        :key="item.title"
+                        :to="item.link"
+                        class="style-btn-menu"
+                    >
+                        <v-list-tile-content>
+                            <v-list-tile-title v-text="item.title" class="black--text"></v-list-tile-title>
+                        </v-list-tile-content>
+                        <v-icon style="color: #bdbdbd">keyboard_arrow_right</v-icon>
+                    </v-list-tile>
+                </v-flex>
+            </v-list>
+
+            <div style="margin-top:30px">
+                <div class="f-form-subsrcript" style="width: 100%;">
+                    <h2 class="headline white--text">Subscription</h2>
+                    <p class="body-3 grey--text"> Join the iSpace Bank newsletter for monthly updates, best practices and product news. </p>
+                    <input placeholder="Your Name" />
+                    <input placeholder="Email Address" />
+                    <v-btn error dark large style="width: 100%; margin: 0;">Sigh Up ></v-btn>
+                </div>
+            </div>
+
+            <swiper :options="swiperOption" style="padding-top: 30px; width:270px">
+                <swiper-slide>
+                    <v-layout column>
+                            <div class="swipper-1"> {{carouselItems[0].content}}  </div>
+                            <v-layout style="padding-top: 10px">
+                                <div>
+                                    <v-avatar size="70px" style="padding-left:3px">
+                                        <img src="../../../assets/images/about/christine-david-avatar.jpg">
+                                    </v-avatar>
+                                </div>
+                                <div class="info-swipper">
+                                    <div class="font-header-swipper"> {{carouselItems[0].name}} </div>
+                                    <div> {{carouselItems[0].position}} </div>
+                                </div>
+                            </v-layout>
+                    </v-layout>
+                </swiper-slide>
+
+                <swiper-slide>
+                    <v-layout column>
+                            <div class="swipper-2"> {{carouselItems[1].content}}  </div>
+                            <v-layout style="padding-top: 10px">
+                                <div>
+                                    <v-avatar size="70px" style="padding-left:3px">
+                                        <img src="../../../assets/images/about/maddy-casandra-avatar.jpg">
+                                    </v-avatar>
+                                </div>
+                                <div class="info-swipper">
+                                    <div class="font-header-swipper"> {{carouselItems[1].name}} </div>
+                                    <div> {{carouselItems[1].position}} </div>
+                                </div>
+                            </v-layout>
+                    </v-layout>
+                </swiper-slide>
+
+                <swiper-slide>
+                    <v-layout column>
+                            <div class="swipper-3"> {{carouselItems[2].content}}  </div>
+                            <v-layout style="padding-top: 10px">
+                                <div>
+                                    <v-avatar size="70px" style="padding-left:3px">
+                                        <img src="../../../assets/images/about/jordan-stansmith-avatar.jpg">
+                                    </v-avatar>
+                                </div>
+                                <div class="info-swipper">
+                                    <div class="font-header-swipper"> {{carouselItems[2].name}} </div>
+                                    <div> {{carouselItems[2].position}} </div>
+                                </div>
+                            </v-layout>
+                    </v-layout>
+                </swiper-slide>
+            </swiper>
+        </v-layout>
+    </v-container>
+</template>
+
+<script>
+import '../../../../node_modules/swiper/dist/css/swiper.min.css'
+import Vue from 'vue'
+import VueAwesomeSwiper from 'vue-awesome-swiper'
+Vue.use(VueAwesomeSwiper)
+
+import { swiper, swiperSlide } from 'vue-awesome-swiper'
+
+export default {
+    name: 'LeftPart',
+    data() {
+        return {
+            items:[
+                { title: 'Our Company', link: '/our-company' },
+                { title: 'Careers', link: '/careers' },
+                { title: 'Our History', link: '/our-history' },
+                { title: 'Our Investment', link: '/our-investment' },
+                { title: 'Partners', link: '/partners' },
+                { title: 'Our Team', link: '/our-team' }
+            ],
+            carouselItems:[
+                { avatar: '../../../assets/images/about/christine-david-avatar.jpg', 
+                    name: 'Christine David', position: 'Marketing', content: "We invest in technology to provide more accessible, trusted ways to move money whether it's online, via mobile or at retail. " },
+                { avatar: '../../../assets/images/about/maddy-casandra-avatar.jpg', 
+                    name: 'Maddy Casandra', position: 'Marketing', content: "We look to increase the number of ways consumers and businesses can move funds around the world, enabling money transfer and payment services. " },
+                { avatar: '../../../assets/images/about/jordan-stansmith-avatar.jpg', 
+                    name: 'Jordan Stansmith', position: 'CEO', content: "We're realizing this vision through our global cross-border platform supported by an multi-channel network that spans over 115 countries and territories, built on ever-evolving technology, trusted relationships with Agents and partners and global compliance capabilities." },
+            ],
+            swiperOption: {
+                autoplay: 3000,
+                setWrapperSize :true,
+                pagination : '.swiper-pagination',
+                paginationClickable :true,
+                observeParents:true,
+                loop: true,
+                speed:800
+            }
+        }
+    }
+}
+</script>
+
+<style>
+
+.style-btn-menu{
+    border-top: 1px solid #e0e0e0;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+}
+
+.swipper-1{
+    background: url('../../../assets/images/boxbackground/box-background-1.png') no-repeat;
+    background-size: 100% 100%;
+    padding: 38px 35px;
+    margin: 0px;
+    color:#9e9e9e;
+    font-weight: 500;
+    font-size: 13px;
+}
+.swipper-2{
+    background: url('../../../assets/images/boxbackground/box-background-2.png') no-repeat;
+    background-size: 100% 100%;
+    padding: 38px 35px;
+    margin: 0px;
+    color:#9e9e9e;
+    font-weight: 500;
+    font-size: 13px;
+}
+.swipper-3{
+    background: url('../../../assets/images/boxbackground/box-background-3.png') no-repeat;
+    background-size: 100% 100%;
+    padding: 38px 35px;
+    margin: 0px;
+    color:#9e9e9e;
+    font-weight: 500;
+    font-size: 13px;
+}
+
+.style-carousel{
+    text-align: top;
+    margin-top: 30px;
+
+}
+
+.info-swipper{
+   margin-left: 15px;  
+   margin-top: 15px;
+}
+
+.font-header-swipper{
+    font-weight: bold; 
+}
+
+.f-form-subsrcript {
+    padding: 38px 20px;
+    background: url('../../../assets/images/page-sidebar-subscription-bg.jpg') no-repeat;
+    background-size: cover;
+}
+.f-form-subsrcript input {
+    display: block;
+    width: 100%;
+    padding: 12px 20px;
+    font-size: 16px;
+    color: #777;
+    border: 0;
+    background-color: white;
+    margin-bottom: 10px;
+    outline: none;
+}
+</style>

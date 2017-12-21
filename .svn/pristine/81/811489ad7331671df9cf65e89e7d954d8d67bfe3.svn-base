@@ -1,0 +1,35 @@
+<template>
+    <div>
+        <transaction-list
+         :isAdmin="true"
+         :processTransaction="processTransaction"
+         :listTransactions="listTransactions"
+         :cancelTransaction="cancelTransaction"
+         >
+        </transaction-list>
+    </div>
+</template>
+
+<script>
+import { mapActions, mapGetters } from 'vuex'
+import TransactionList from '../../../components/TransactionList'
+export default {
+    components: {
+        TransactionList
+    },
+    computed: {
+        ...mapGetters(['listTransactions'])
+    },
+    methods: {
+        ...mapActions(['getTransactionList', 'processTransaction', 'cancelTransaction'])
+    },
+    async mounted() {
+        await this.getTransactionList()
+    }
+
+}
+</script>
+
+<style scoped>
+
+</style>

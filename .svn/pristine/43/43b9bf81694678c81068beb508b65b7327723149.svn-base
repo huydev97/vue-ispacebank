@@ -1,0 +1,87 @@
+<template>
+    <v-container class="white header-app">
+        <div class="logo-w">
+            <img class="logo" src="../../assets/images/logo-ispace-1.png" />
+        </div>
+        <div class="contact-content">
+            <div class="card-contact">
+                <v-icon large class="teal--text text--darken-2 card-logo">fa-envelope-o</v-icon>
+                <div>
+                    <div class="headline card-title body-2">Send us a Message</div>
+                    <div class="subtitle card-subtitle title">evolution@ispacebank.com</div>
+                </div>
+            </div>
+            <div class="card-contact">
+                <v-icon large class="teal--text text--darken-2 card-logo">fa-phone</v-icon>
+                <div>
+                    <div class="headline card-title body-2">Give us a Call</div>
+                    <div class="subtitle card-subtitle title">585-209-2272</div>
+                </div>
+            </div>
+            <div class="card-contact">
+                 <v-icon large class="teal--text text--darken-2 card-logo">fa-clock-o</v-icon>
+                <div>
+                    <div class="headline card-title body-2">Opening Hours</div>
+                    <div class="subtitle card-subtitle title">Mon - Sat: 7:00 - 18:00 </div>
+                </div>
+            </div>
+        </div>
+
+    </v-container>
+</template>
+
+<script>
+export default {
+    name: 'header'
+}
+</script>
+
+<style scoped>
+.header-app {
+    width: 100%;
+    max-width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+.logo-w {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.logo {
+    width: 180px;
+    height: 110px;
+}
+
+.contact-content {
+    flex: 2;
+    display: flex;
+    flex-direction: 'row';
+    align-items: center;
+    justify-content: space-around;
+}
+
+.card-contact {
+    background-color: rgba(0, 0, 0, 0);
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.card-logo {
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-right: 15px;
+}
+
+.card-title {
+    color: #777777;
+}
+
+.card-subtitle {
+    color: #00468C;
+}
+</style>

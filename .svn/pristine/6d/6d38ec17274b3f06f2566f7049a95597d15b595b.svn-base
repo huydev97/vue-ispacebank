@@ -1,0 +1,60 @@
+<template>
+    <div class="pv-wrapper">
+        <!-- <div class="pv-box">
+            <h2 class="body-2 grey--text">Bitcoin Info</h2>
+                <label style="font-size: 25px;">
+                    BUY:
+                    <label class="blue--text body-2">{{_bitcoinPrice.buy || 0}} PV </label>
+                </label>
+                <label style="font-size: 25px;">
+                    SELL:
+                    <label class="blue--text body-2">{{_bitcoinPrice.sell || 0}} PV </label>
+                </label>
+        </div> -->
+        <div class="pv-box">
+            <h2 class="body-2 grey--text">LAST</h2>
+            <h1 class="display-1 blue--text">{{_bitcoinPrice.last || 0}} PV</h1>
+        </div>
+        <div class="pv-box">
+            <h2 class="body-2 grey--text">BUY</h2>
+            <h1 class="display-1 blue--text">{{_bitcoinPrice.buy || 0}} PV</h1>
+        </div>
+        <div class="pv-box">
+            <h2 class="body-2 grey--text">SELL</h2>
+            <h1 class="display-1 blue--text">{{_bitcoinPrice.sell || 0}} PV</h1>
+        </div>
+    </div>
+</template>
+
+<script>
+export default {
+    name: 'pv-box',
+    props: {
+        bitcoinPrice: Object
+    },
+    computed: {
+        _bitcoinPrice() {
+            return this.bitcoinPrice
+        }
+    }
+}
+</script>
+
+<style scoped>
+.pv-wrapper {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: center;
+    margin: 20px;
+    padding: 5px;
+    border-radius: 5px;
+    background-color: white;
+}
+
+.pv-box {
+    flex: 1;
+    min-width: 250px;
+}
+</style>

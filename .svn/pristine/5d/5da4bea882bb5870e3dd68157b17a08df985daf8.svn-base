@@ -1,0 +1,66 @@
+<template>
+    <div style="padding: 10px;">
+        <h2 class="headline black--text text--light-2">ADD FUN</h2>
+        <v-form v-model="valid">
+            <v-text-field label="Admin BTC Address" v-model="adminBTC" disabled></v-text-field>
+            <v-text-field label="Amount of BTC" v-model="amount" required></v-text-field>
+            <v-text-field label="PV" :value="_getPvFromPrice" required disabled></v-text-field>
+            <v-text-field label="Your password" v-model="password" type="password" required></v-text-field>
+
+            <v-btn success @click.stop="onAddFun">Add Fun</v-btn>
+        </v-form>
+    </div>
+</template>
+
+<script>
+export default {
+
+    props: {
+        idUser: Number,
+        eWallet: String,
+        buyPv: Function,
+        bitcoinPrice: Object
+    },
+    data() {
+        return {
+            valid: false,
+            adminBTC: '178WYwRRbodQ5S7coim37d6upe8yvzvkfj',
+            amount: 0,
+            password: ''
+        }
+    },
+    computed: {
+        _idUser() {
+            return this.idUser
+        },
+        _eWallet() {
+            return this.eWallet
+        },
+        _getPvFromPrice() {
+            return this.bitcoinPrice.buy * this.amount
+        }
+    },
+    methods: {
+        onAddFun(e) {
+            if (this.amount < 0.01) {
+                alert('Amount of bitcoin must be greater than 0.01')
+            } else {
+                let res = this.buyPv({
+                    amountBTC: this.amount,
+                    eWallet: this._eWallet,
+                    idUser: this._idUser,
+                    password: this.password
+                })
+                if (res) {
+                    this.amount = 0
+                    this.password = ''
+                }
+            }
+        }
+    },
+}
+</script>
+
+<style scoped>
+
+</style>

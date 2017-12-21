@@ -1,0 +1,64 @@
+<template>
+    <div >
+        <div class="map-wrapper">
+            <div class="map-left">
+                <affiliate-link-box :username="user.username"></affiliate-link-box>
+            </div>
+            <div class="map-right">
+                <h2 class="display-2">Bonus</h2>
+                <v-divider></v-divider>
+                <div style="text-align: left" class="body-2">
+                    <p>You can now share your affiliate link on your social media channels and earn a bonus of $2.0 / 0.000176 BTC for each social media account where you promote iSpace Bank.</p>
+
+                    <p>Here are the rules for this campaign:</p>
+                    <ul style="margin-bottom: 5px;">
+                        <li>You can only apply for this bonus once per social media account (1 bonus for Facebook, 1 bonus for twitter and so on).</li>
+                        <li>There is no maximum number of social media accounts. We are global so feel free to share this in your local communities.</li>
+                        <li>You need to have an active investment or any amount with us in order to participate.</li>
+                        <li>You must share the link using public privacy settings, so that everyone can see the link in your profile, not just yourself.</li>
+                        <li>In your bonus request form, please put the link to your Facebook wall, twitter or instagram post, so we can verify that you shared the link.</li>
+                    </ul>
+                    <p>Happy sharing!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+import {mapGetters} from 'vuex'
+import AffiliateLinkBox from '../../../components/Invest/AffilateLinkBox'
+
+export default {
+    name: 'affiliate-page',
+    components: {
+        AffiliateLinkBox
+    },
+    computed: {
+        ...mapGetters(['user'])
+    }
+}
+</script>
+
+<style scoped>
+.map-wrapper {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    color: #3E4B5B;
+    padding: 1%;
+    margin: 1%;
+}
+
+.map-left {
+    flex: 3;
+}
+
+.map-right {
+    flex: 1;
+    padding: 20px;
+    min-width: 250px;
+    text-align: center;
+}
+</style>

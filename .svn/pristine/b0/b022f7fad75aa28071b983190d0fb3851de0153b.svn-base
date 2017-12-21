@@ -1,0 +1,96 @@
+<template>
+  <v-toolbar :fixed="fixed" toolbar class="indigo darken-3">
+    <v-toolbar-side-icon class="hidden-md-and-up" style="color: white;" @click="drawer = !drawer"></v-toolbar-side-icon>
+    <v-toolbar-items class="hidden-sm-and-down  indigo darken-3">
+      <v-btn class="white-text" style="color: white;" flat exact to="/">Home</v-btn>
+      <v-btn class="white-text" style="color: white;" flat to="/services">Services</v-btn>
+      <v-btn class="white-text" style="color: white;" flat to="/infomation">About</v-btn>
+      <v-btn class="white-text" style="color: white;" flat to="news">News</v-btn>
+      <v-btn class="white-text" style="color: white;" flat to="contact">contact</v-btn>
+      <v-btn class="white-text" style="color: white;" flat to="register" v-show="!isAuthenticated">Register</v-btn>
+      <v-btn class="white-text" style="color: white;" flat to="login" v-show="!isAuthenticated">Login</v-btn>
+      <v-btn class="white-text" style="color: white;" flat @click="logout()" v-show="isAuthenticated">Logout</v-btn>
+    </v-toolbar-items>
+    <v-spacer></v-spacer>
+
+    <a href="https://www.facebook.com">
+      <i class="fa fa-facebook-square white--text fa-2x margin-left" aria-hidden="true"></i>
+    </a>
+    <a href="https://plus.google.com">
+      <i class="fa fa-google-plus-square white--text fa-2x margin-left" aria-hidden="true"></i>
+    </a>
+    <a href="https://www.instagram.com">
+      <i class="fa fa-instagram white--text fa-2x margin-left" aria-hidden="true"></i>
+    </a>
+    <a href="https://www.twitter.com">
+      <i class="fa fa-twitter-square white--text fa-2x margin-left" aria-hidden="true"></i>
+    </a>
+
+  </v-toolbar>
+</template>
+
+<script>
+import { mapGetters, mapActions } from 'vuex'
+
+export default {
+  name: 'navigation',
+  data() {
+    return {
+      drawer: true,
+      fixed: false
+    }
+  },
+  computed: {
+    ...mapGetters({
+      isAuthenticated: 'isAuthenticated'
+    }),
+  },
+  methods: {
+    ...mapActions(['logout']),
+
+    handleScroll() {
+      if (window.scrollY < 164) {
+        this.fixed = false
+      } else
+        this.fixed = true;
+    }
+
+  },
+  created() {
+    window.addEventListener('scroll', this.handleScroll);
+  },
+  destroyed() {
+    window.removeEventListener('scroll', this.handleScroll);
+  }
+}
+
+</script>
+
+<style scoped>
+.fix-nav {
+  position: fixed;
+  z-index: 100;
+}
+
+.nav {
+  overflow: hidden;
+  background-color: #00468C;
+  transition: all 0.5s;
+}
+
+.menu-drawer {
+  background-color: white;
+}
+
+.white-text {
+  color: white;
+}
+
+.link {
+  text-decoration: none;
+}
+
+.margin-left {
+  margin-left: 5px;
+}
+</style>

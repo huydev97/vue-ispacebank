@@ -1,0 +1,38 @@
+<template>
+    <div class="white" style="border-radius: 5px;">
+        <div style="padding: 10px;">
+            <h2 class="body-2 light-green--text text--lighten-1" style="margin: 0;">YOUR AFFILIATE LINK</h2>
+            <v-text-field style="margin: 0;" :value="_getAffiliateLink" disabled />
+            <!-- <v-btn small class="light-green lighten-1 white--text" style="margin: 0;">Copy Link</v-btn> -->
+
+            <v-divider style="margin-top: 10px;"></v-divider>
+        </div>
+    </div>
+</template>
+
+<script>
+export default {
+    name: 'link-affiliate',
+    props: {
+        username: String
+    },
+    data() {
+        return {
+            affLink: 'http://ispacebank.us/register/'
+        }
+    },
+    computed: {
+        _username() {
+            return this.username
+        },
+        _getAffiliateLink() {
+            return this.affLink + this._username
+        }
+
+    }
+}
+</script>
+
+<style scoped>
+
+</style>

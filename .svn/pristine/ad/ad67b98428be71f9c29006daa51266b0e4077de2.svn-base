@@ -1,0 +1,147 @@
+<template>
+    <swiper :options="swiperOption">
+        <swiper-slide>
+            <div class="a-slide slide-1 slide-flex">
+                <div class="xeptongwrap">
+                    <img class="xeptong" src="../../../assets/images/xeptong.png" />
+                </div>
+                <div class="slide-title-w">
+
+                    <img class="logo" src="../../../assets/images/logo-ispace-1.png" />
+
+                    <h1 class="slide-title white--text">SMART IDEA</h1>
+                    <h1 class="slide-title indigo--text">FOR YOUR MONEY </h1>
+                    <h1 class="headline grey--text text--darken-3" style="width: 500px;">Financial advice that gives you the armour to protectwhat’s yours</h1>
+
+                    <div>
+                        <v-btn to="/services" primary large class="indigo white--text">OUR SERVICES ></v-btn>
+                        <v-btn to="/contact" primary large class="black white--text">CONTACT US ></v-btn>
+                    </div>
+                </div>
+            </div>
+        </swiper-slide>
+        <swiper-slide>
+            <div class="a-slide slide-2 slide-flex">
+                <div class="slide-title-w" style="text-align: center;">
+
+                    <img src="../../../assets/images/banner/home-02-layer-02.png" />
+
+                    <h1 class="slide-title white--text" style="font-weight: 20px; width: 60%; margin-top: 30px;">Learn More For Managing & <br />Growing Your Money.</h1>
+                    <div>
+                        <v-btn to="/contact" outline primary large class="white white--text" style="margin-top: 40px;">CONTACT US ></v-btn>
+                    </div>
+                </div>
+            </div>
+        </swiper-slide>
+        <swiper-slide>
+            <div class="a-slide slide-3 slide-flex">
+                <div class="slide-title-w">
+                    <h1 class="slide-title black--text">Finance Concern</h1>
+                    <h1 class="headline grey--text text--darken-3" style="margin-top: 5%;">Financial advice that gives you the armour to protect what’s yours</h1>
+                    <div>
+                        <v-btn to="/services" primary large class="indigo white--text">OUR SERVICES ></v-btn>
+                    </div>
+                </div>
+            </div>
+        </swiper-slide>
+        <div class="swiper-pagination" slot="pagination"></div>
+    </swiper>
+</template>
+
+<script>
+import '../../../../node_modules/swiper/dist/css/swiper.min.css'
+import Vue from 'vue'
+import VueAwesomeSwiper from 'vue-awesome-swiper'
+Vue.use(VueAwesomeSwiper)
+
+import { swiper, swiperSlide } from 'vue-awesome-swiper'
+
+export default {
+    name: 'banner',
+    data() {
+        return {
+            swiperOption: {
+                pagination: '.swiper-pagination',
+                paginationClickable: true,
+                autoHeight: true,
+                autoplay: 2000,
+                height: 500,
+                direction: 'vertical',
+                effect: 'fade'
+            }
+        }
+    },
+    components: {
+        swiper,
+        swiperSlide
+    }
+}
+</script>
+
+<style scoped>
+.slide-flex {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.a-slide {
+    background-color: rgba(0, 0, 0, 0);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+    width: 100%;
+    height: 100%;
+    opacity: 1;
+    visibility: inherit;
+    z-index: 20;
+}
+
+.slide-1 {
+    background-image: url("../../../assets/images/banner/2403.jpg");
+}
+
+.xeptongwrap {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.xeptong {
+    width: 325.584px;
+    height: 436.506px;
+    position: absolute;
+    bottom: 0;
+}
+
+.slide-title-w {
+    flex: 1.6;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.slide-title {
+    font-size: 60px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.slide-2 {
+    background-image: url("../../../assets/images/banner/588313139.jpg");
+}
+
+.slide-3 {
+    background-image: url("../../../assets/images/banner/OGF8J50.jpg");
+}
+
+.logo {
+    width: 180px;
+    height: 110px;
+}
+</style>

@@ -1,0 +1,84 @@
+<template>
+    <div class="tr-list">
+        <label v-show="_listTransactions.length<1" style="width: 100%; padding: 10px;">None.</label>
+        <transaction-item 
+        v-for="(item, i) in _listTransactions" 
+        :key="i" 
+        :id="item.id"
+        :index="i"
+        :processTransaction="processTransaction"
+        :cancelTransaction="cancelTransaction"
+        :state="item.state"
+        :title="getTitle(item.type)"
+        :content="getContent(item)"
+        :createdAt="_getCreatedAt(item.createdAt)"
+        :isAdmin="_isAdmin"
+        ></transaction-item>
+    </div>
+</template>
+
+<script>
+import moment from 'moment'
+import TransactionItem from './TransactionItem'
+export default {
+    props: {
+        cancelTransaction: Function,
+        processTransaction: Function,
+        listTransactions: Array,
+        isAdmin: Boolean
+    },
+    computed: {
+        _listTransactions() {
+            return this.listTransactions
+        },
+        _isAdmin() {
+            return this.isAdmin
+        }
+    },
+    methods: {
+        getTitle(type) {
+            switch(type) {
+                case 1:
+                    return 'Investment'
+                case 2:
+                    return 'Transfer'
+                case 3: 
+                    return 'Add Fun'
+                case 4: 
+                    return 'Withraw'
+                default: 
+                    return 'Un-know'
+            }
+        },
+        getContent(item) {
+            switch(item.type) {
+                case 1:
+                    return `Sender: ${item.email}, Amount: ${item.package} PV`
+                case 2:
+                    return `Sender: ${item.email} to Receiver: ${item.note}, Amount: ${item.package} PV`
+                case 3: 
+                    return `Sender: ${item.email}, E-wallet: ${item.note} , Amount: ${item.package} BTC`
+                case 4: 
+                    return `Sender: ${item.email}, Amount: ${item.package} PV`
+                default: 
+                    return 'Un-know'
+            }
+        },
+        _getCreatedAt(time) {
+            return moment(time).format('LLL')
+        }
+
+    },
+    components: {
+        TransactionItem
+    }
+}
+</script>
+
+<style scoped>
+.tr-list {
+    display: flex;
+    flex-direction: row-reverse;
+    flex-wrap: wrap;
+}
+</style>

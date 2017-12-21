@@ -1,0 +1,51 @@
+import * as types from './mutation-types'
+import axios from 'axios'
+
+export default {
+    /* function đăng nhập
+      login({commit, state}, params 1) 
+      params 1: json object user infomation { username: , password}
+
+      reponse: {success, message, errQuery, infomation}
+    */
+    async login({ commit, state }, user) {
+        try {
+            await commit(types.LOGIN_REQUEST)
+
+            let results = await axios.post('http://192.168.2.110:1337/user/login', {
+                information: { email: user.username, password: user.password }
+            })
+
+            let { success, message, errQuery, infomation } = results;
+            console.log(JSON.stringify(results))
+            if (success) {
+                await commit(types.LOGIN_SUCCESS, infomation)
+                return true
+            } else {
+
+                await commit(types.LOGIN_FAIL, { errormesssage: message })
+                return false
+            }
+
+        } catch (error) {
+            console.log('Error: ', error)
+            await commit(types.LOGIN_FAIL, errorMessage = 'Lỗi máy chủ')
+            return false
+        }
+    },
+    async logout({ commit, state }) {
+        await commit(types.LOGOUT)
+    },
+    async register({ commit, state }, user) {
+        await commit(types.REGISTER_REQUEST)
+        if (user.username === "hynguyen" && user.password === "123456") {
+            await commit(types.REGISTER_SUCCESS)
+            await commit(types.LOGIN_SUCCESS)
+            return true
+
+        } else {
+            return false
+        }
+    },
+}
+

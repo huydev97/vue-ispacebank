@@ -1,0 +1,184 @@
+/**
+ * UserController
+ *
+ * @description :: Server-side logic for managing users
+ * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
+ */
+var sha1 = require('sha1');
+var md5 = require('md5');
+
+module.exports = {
+    // CRUD USER
+    /** 
+     *  Function : Create a new user
+     *  Method : POST
+     *  Inputs : email,useranme, password, phone, country
+     */
+    create: async (req, res, next) => {
+        if (req.method != 'POST')
+            return res.json({ success: false, message: 'Something is wrong at router\'\s method.' });
+        if (req.body.email == '' || req.body.username == '' || req.body.password == '' || req.body.phone == '' || req.body.country == '')
+            return res.json({ success: false, message: 'Please enter full information.' });
+        let newUser = req.body;
+        let password = newUser.password;
+        newUser.password = sha1(password + md5(password));
+        // Add user to DB
+        User.create(newUser).exec(async (err, newUser) => {
+            if (err) // If error is exists
+                res.json({ success: false, message: 'Failed to create new user!.', errQuery: err });
+            else // If success
+            {
+                Bagbitcoin.create({ id_user: newUser.id }).exec((err, newBag) => {
+                    if (err)
+                        console.log(err)
+                    else
+                        console.log('Created new bag.')
+                }); // Create new bag
+                res.json({ success: true, message: 'Successfully created a new account.' });
+            }
+        });
+    },
+
+    /** 
+     *  Function : Read a user in database
+     *  Method : POST
+     *  Inputs : An Object conditions
+     */
+    read: async (req, res, next) => {
+        if (req.method != 'POST')
+            return res.json({ success: false, message: 'Something is wrong at router\'\s method.' });
+        if (!req.body.conditions)
+            return res.json({ success: false, message: 'You need send me a Object about conditions to use this route.' });
+        User.findOne({
+            where: req.body.conditions,
+        }).exec((err, user) => {
+            if (err)
+                return res.json({ success: false, message: 'Error about query, please try again!', errQuery: err });
+            if (!user)
+                res.json({ success: false, message: 'Can\'t find user to show!!' });
+            else
+                res.json({ success: true, message: 'Load information user success!', users: user });
+        });
+    },
+    /** 
+     *  Function : Update a user in database
+     *  Method : PUT
+     *  Inputs : An Object conditions and Object informations need to update
+     */
+    update: async (req, res, next) => {
+        if (req.method != 'PUT')
+            return res.json({ success: false, message: 'Something is wrong at router\'\s method.' });
+        if (!req.body.conditions || !req.body.infoUpdate)
+            return res.json({ success: false, message: 'You need send me a Object about conditions and a Object about information need to update(infoUpdate: { some attributes }) to use this route.' });
+
+        User.update(req.body.conditions, req.body.infoUpdate, (err, updated) => {
+            if (err)
+                return res.json({ success: false, message: 'Error about query, please try again!', errQuery: err });
+            if (updated.length <= 0)
+                res.json({ success: false, message: 'Can\'t find user to update!!' });
+            else
+                res.json({ success: true, message: 'Updated user have name ' + updated[0].name });
+        });
+    },
+
+    /** 
+     *  Function : Delete a user in database
+     *  Method : DELETE
+     *  Inputs : An Object conditions to delete
+     */
+    delete: async (req, res, next) => { // Delete user by Object conditions
+        if (req.method != 'DELETE')
+            return res.json({ success: false, message: 'Something is wrong at router\'\s method.' });
+        if (!req.body.conditions)
+            return res.json({ success: false, message: 'You need send me a Object about conditions to use this route.' });
+        let conditions = JSON.parse(req.body.conditions);
+        User.destroy(conditions).exec((err, deleted) => {
+            if (err)
+                return res.json({ success: false, message: 'Error about query, please try again!', errQuery: err });
+            if (deleted.length <= 0)
+                res.json({ success: false, message: 'Can\'t find user to delete!!' });
+            else
+                res.json({ success: true, message: 'Deleted user have name ' + deleted[0].name });
+        });
+    },
+    /** 
+     *  Function : Login User
+     *  Method : POST
+     *  Inputs : An Object information to login (Email, password)
+     */
+    login: async (req, res, next) => { //information = {email, password}
+        if (req.method != 'POST')
+            return res.json({ success: false, message: 'Something is wrong at router\'\s method.' });
+        if (req.cookies.login_token) {
+            User.findOne({ token: req.cookies.login_token },(err, user) => {
+                if (err)
+                    return res.json({ success: false, message: 'Error about query, please try again!', errQuery: err });
+                if(user)
+                    return res.json({ success: true, message: 'You has logged!', user: user });
+                else
+                    return res.json({ success: false, message: 'Failed to confirm token login or user is login in another computer.'});
+            });
+        } else {
+            if (!req.body.email || !req.body.email || req.body.email == '' || req.body.password == '')
+                return res.json({ success: false, message: 'Email or password is empty or undefine.' });
+            let password = sha1(req.body.password + md5(req.body.password));
+            User.findOne({
+                where: { email: req.body.email, password: password }
+            }).exec((err, user) => {
+                if (err)
+                    return res.json({ success: false, message: 'Error about query, please try again!', errQuery: err });
+                if (!user)
+                    res.json({ success: false, message: 'Email and password is not match!' });
+                else {
+                    User.update({ email: req.body.email }, { // Give token login for user
+                        token: sha1(md5(req.body.email) + md5(Date.now())) + sha1(req.body.password + Date.now()),
+                    }).exec((err, updated) => {
+                        if (err)
+                            return res.json({ success: false, message: 'Error about query, please try again!', errQuery: err });
+                        if (updated.length <= 0)
+                            res.json({ success: false, message: 'Failed to created token for login user.!!' });
+                        else {
+                            console.log('1 User logged.')
+                            res.json({ success: true, message: 'Login success!', user: updated[0] });
+                        }
+                    });
+                }
+            });
+        }
+    },
+
+    /** 
+     *  Function : Get User By Token
+     *  Method : POST
+     *  Inputs : cookie.login_token
+     */
+    getUserByToken: async (req, res, next) => {
+        if (req.method != 'POST')
+            return res.json({ success: false, message: 'Something is wrong at router\'\s method.' });
+        User.findOne({ token: req.cookies.login_token || req.body.login_token }).exec((err, user) => {
+            if (err)
+                return res.json({ success: false, message: 'Error about query, please try again!', errQuery: err });
+            if (!user)
+                res.json({ success: false, message: 'Failed to get user.(Failed confirm token)' });
+            else
+                res.json({ success: true, message: 'Success to get user!', user: user });
+        });
+    },
+    /** 
+     *  Function : Get list user for admin
+     *  Method : POST
+     *  Inputs : cookie.login_token of admin
+     */
+    getListUsers: async (req, res, next) => {
+        if (req.method != 'POST')
+            return res.json({ success: false, message: 'Something is wrong at router\'\s method.' });
+        User.find({}).exec((err, users) => {
+            if (err)
+                return res.json({ success: false, message: 'Error about query, please try again!', errQuery: err });
+            if (!users)
+                res.json({ success: false, message: 'Failed to get list user.' });
+            else
+                res.json({ success: true, message: 'Success to get list user!', users: users });
+        });
+    }
+};  

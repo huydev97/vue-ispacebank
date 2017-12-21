@@ -1,0 +1,165 @@
+<template>
+    <div class="form-register">
+        <v-form v-model="valid" ref="registerForm">
+            <div class="logo-w">
+                <img class="logo" src="../../../assets/images/logo-ispace-1.png" />
+            </div>
+            <p class="headline">Create new account</p>
+
+            <v-divider></v-divider>
+
+            <v-text-field label="Username" v-model="username" :rules="usernameRules" :counter="6" required></v-text-field>
+
+            <div class="form-item">
+                <v-text-field class="margin-right" type="password" label="Password" v-model="password" :rules="passwordRules" required></v-text-field>
+                <v-text-field class="margin-left" type="password" label="Repeat Password" v-model="repeatPassword" :rules="passwordRules" required></v-text-field>
+            </div>
+
+            <div class="form-item">
+                <v-text-field class="margin-right" type="email" label="Email Address" v-model="email" :rules="emailRules" required></v-text-field>
+                <v-text-field class="margin-left" type="email" label="Repeat Email Address" v-model="repeatEmail" :rules="emailRules" required></v-text-field>
+            </div>
+
+            <div>
+                <p class="body-2 select-ttl">Country: {{countyCode}}</p>
+                <select :item="countyCode" class="crs-country btn select-btn" data-region-id="one"></select>
+            </div>
+
+            <div>
+                <p class="body-2 select-ttl">Region:</p>
+                <select class="btn select-btn" id="one"></select>
+            </div>
+
+            <div class="form-item">
+                <v-text-field class="margin-right" type="number" label="Phone Code: +84" v-model="email" disabled></v-text-field>
+                <v-text-field class="margin-left" style="" type="number" label="Phone number" v-model="phoneNumber" required></v-text-field>
+            </div>
+
+            <v-divider></v-divider>
+
+            <v-checkbox label="I agree with the AGENCY AGREEMENT" v-model="agree"></v-checkbox>
+            <v-btn primary :loading="_isRequesting" @click="doLogin(user = {username, password})">Register</v-btn>
+            <v-btn @click="clearForm">Clear</v-btn>
+
+        </v-form>
+    </div>
+</template>
+
+<script> 
+import '../../../../node_modules/country-region-dropdowns/dist/crs'
+
+export default {
+    name: 'loginform',
+    props: {
+        login: Function,
+        isRequesting: Boolean
+    },
+
+    data() {
+        return {
+            countyCode: '',
+            valid: false,
+
+            username: '',
+            usernameRules: [
+                (v) => !!v || 'Name is required',
+                (v) => v.length >= 6 || 'Name must be at least 6 characters'
+            ],
+
+            password: '',
+            repeatPassword: '',
+            passwordRules: [
+                (v) => !!v || 'Password is required',
+                (v) => (v === this.$data.password) || 'Repeat password does not match password'
+            ],
+            email: '',
+            repeatEmail: '',
+            emailRules: [
+                (v) => !!v || 'E-mail is required',
+                (v) => /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid',
+                (v) => (v === this.$data.email) || 'Repeat email does not match email'
+            ],
+            phoneNumber: Number,
+
+            agree: true,
+
+            isRequesting: false,
+            loginErrorMessage: ''
+        }
+    },
+    computed: {
+        _isRequesting() {
+            return this.isRequesting
+        }
+    },
+    methods: {
+        clearForm() {
+            this.$refs.registerForm.reset()
+        },
+
+    }
+}
+</script>
+
+<style scoped>
+.divider {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.logo-w {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.logo {
+    width: 50%;
+    margin-bottom: auto;
+}
+
+.form-register {
+    margin: auto;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    padding: 6%;
+    max-width: 600px;
+    border-radius: 5px;
+    background-color: white;
+}
+
+.form-item {
+    margin: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.margin-left {
+    margin-left: 5px;
+}
+
+.margin-right {
+    margin-right: 5px;
+}
+
+.form-register-footer {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+.select-ttl {
+    font-size: 17;
+    margin: 0;
+    margin-bottom: 5px;
+}
+
+.select-btn {
+    width: 100%;
+    margin: 0;
+    padding: 5px;
+}
+</style>

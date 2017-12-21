@@ -1,0 +1,117 @@
+<template>
+    <div class="form-login">
+        <v-form v-model="valid" ref="loginForm">
+            <div class="logo-w">
+                <img class="logo" src="../../../assets/images/logo-ispace-1.png" />
+            </div>
+
+            <v-divider></v-divider>
+
+            <v-text-field label="Username" v-model="username" :rules="usernameRules" :counter="6" required></v-text-field>
+            <v-text-field type="password" label="Password" v-model="password" :rules="passwordRules" required></v-text-field>
+
+            <v-divider></v-divider>
+
+            <v-checkbox label="Remember Me" v-model="saveLogin"></v-checkbox>
+            <h2 class="red--text body-2" v-show="loginErrorMessage && loginErrorMessage.length > 0">*{{loginErrorMessage}}</h2>
+            <v-btn primary :loading="_isRequesting" @click="doLogin(user = {username, password})">Login</v-btn>
+            <v-btn @click="clearForm">Clear</v-btn>
+
+            <v-divider class="divider"></v-divider>
+            <div class="form-login-footer">
+                <v-btn to="/register" primary outline class="flex">Register</v-btn>
+                <v-btn to="/forgotpassword" primary outline class="flex">Forgot Password?</v-btn>
+            </div>
+        </v-form>
+    </div>
+</template>
+
+<script>
+export default {
+    name: 'loginform',
+    props: {
+        login: Function,
+        isRequesting: Boolean,
+        loginErrorMessage: String
+    },
+
+    data() {
+        return {
+            valid: false,
+            username: '',
+            password: '',
+            saveLogin: false,
+            usernameRules: [
+                (v) => !!v || 'Name is required',
+                (v) => v.length >= 6 || 'Name must be at least 6 characters'
+            ],
+            passwordRules: [
+                (v) => !!v || 'Password is required',
+            ],
+
+        }
+    },
+    computed: {
+        requestlogin() {
+            return this.login
+        },
+        _isRequesting() {
+            return this.isRequesting
+        },
+        _loginErrorMessage() {
+            return this.loginErrorMessage
+        }
+    },
+    methods: {
+        clearForm() {
+            this.$refs.loginForm.reset()
+            this.$router.replace('/investment')
+        },
+        async doLogin(user) {
+            try {
+                let response = await this.requestlogin(user)
+                if (response === true) {
+                    this.clearForm()
+                }
+            } catch (err) {
+                console.log(err)
+            }
+        }
+    }
+}
+</script>
+
+<style scoped>
+.divider {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.logo-w {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.logo {
+    width: 50%;
+    margin-bottom: auto;
+}
+
+.form-login {
+    margin: auto;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    padding: 6%;
+    max-width: 600px;
+    border-radius: 5px;
+    background-color: white;
+}
+
+.form-login-footer {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+</style>

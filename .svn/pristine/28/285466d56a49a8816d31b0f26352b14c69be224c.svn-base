@@ -1,0 +1,241 @@
+/**
+ * BagbitcoinController
+ *
+ * @description :: Server-side logic for managing bagbitcoins
+ * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
+ */
+/*
+  Code Caculate interest
+*/
+
+module.exports = {
+    // CRUD USER
+    /** 
+     *  Function : Create a new bag bitcoin
+     *  Method : POST
+     *  Inputs : id_user , investment
+     */
+    create: async (req, res, next) => {
+        if (req.method != 'POST')
+            return res.json({ success: false, message: 'Something is wrong at router\'\s method.' });
+        if (!req.body.id_user || !req.body.investment || req.body.id_user == '' || req.body.investment == '')
+            return res.json({ success: false, message: 'Please enter full information.' });
+        Bagbitcoin.create({
+            id_user: req.body.id_user,
+            investment: req.body.investment,
+        }).exec((err, bagbitcoin) => {
+            if (err)
+                res.json({ success: false, message: 'Failed to c reate new bag bitcoin!.', errQuery: err });
+            else
+                res.json({ success: true, message: 'Created a bag bitcoin!. id: #' + bagbitcoin.id });
+        });
+    },
+    /** 
+         *  Function : Read a bagbitcoin in database
+         *  Method : POST
+         *  Inputs : An Object conditions
+         */
+    read: async (req, res, next) => {
+        if (req.method != 'POST')
+            return res.json({ success: false, message: 'Something is wrong at router\'\s method.' });
+        if (!req.body.idUser)
+            return res.json({ success: false, message: 'You need send me idUser to use this route.' });
+        Bagbitcoin.findOne({
+            id_user: req.body.idUser,
+        }).exec((err, user) => {
+            if (err)
+                return res.json({ success: false, message: 'Error about query, please try again!', errQuery: err });
+            if (!user)
+                res.json({ success: false, message: 'Can\'t find bagbitcoin to show!!' });
+            else
+                res.json({ success: true, message: 'Load information bag bitcoin success!', users: user });
+        });
+    },
+    /** 
+     *  Function : Update bag bitcoin in database
+     *  Method : PUT
+     *  Inputs : id_bagbitcoin and Object informations need to update
+     */
+    update: async (req, res, next) => {
+        if (req.method != 'PUT')
+            return res.json({ success: false, message: 'Something is wrong at router\'\s method.' });
+        if (!req.body.id_bagbitcoin || !req.body.infoUpdate)
+            return res.json({ success: false, message: 'You need send me a id_bagbitcoin and a Object about information need to update(infoUpdate: { some attributes }) to use this route.' });
+        Bagbitcoin.update({ id: req.body.id_bagbitcoin }, req.body.infoUpdate, (err, updated) => {
+            if (err)
+                return res.json({ success: false, message: 'Error about query, please try again!', errQuery: err });
+            if (updated.length <= 0)
+                res.json({ success: false, message: 'Can\'t find Bag Bitcoin to update!!' });
+            else
+                res.json({ success: true, message: 'Updated Bag Bitcoin id : #' + updated[0].id });
+        });
+    },
+
+    /** 
+     *  Function : Delete bag bitcoin in database
+     *  Method : DELETE
+     *  Inputs : An id_bagbitcoin to delete
+     */
+    delete: async (req, res, next) => { // Delete user by Object conditions
+        if (req.method != 'DELETE')
+            return res.json({ success: false, message: 'Something is wrong at router\'\s method.' });
+        if (!req.body.conditions)
+            return res.json({ success: false, message: 'You need send me a Object about conditions to use this route.' });
+        Bagbitcoin.destroy({
+            id: req.body.id_bagbitcoin
+        }).exec((err, deleted) => {
+            if (err)
+                return res.json({ success: false, message: 'Error about query, please try again!', errQuery: err });
+            if (deleted.length <= 0)
+                res.json({ success: false, message: 'Can\'t find bag bitcoin to delete!!' });
+            else
+                res.json({ success: true, message: 'Deleted bag bitcoin id : #' + deleted[0].id });
+        });
+    },
+
+    /** 
+     *  Function : Set pv for moder or admin
+     *  Method : PUT
+     *  Inputs : An id_bagbitcoin, howPV
+     */
+    setPointForAdmin: async (req, res, next) => {
+        if (req.method != 'PUT')
+            return res.json({ success: false, message: 'Something is wrong at router\'\s method.' });
+        if (!req.body.id_bagbitcoin || !req.body.howPV)
+            return res.json({ success: false, message: 'You need send me a id_bagbitcoin and howPV to use this route.' });
+        let bag = await Bagbitcoin.find({ id: req.body.id_bagbitcoin });
+        if (bag.length <= 0)
+            return res.json({ success: false, message: 'Can\'t find Bag Bitcoin to update!!' });
+
+        let newPV = parseFloat(bag[0].balance_wallet) + parseFloat(req.body.howPV);
+        Bagbitcoin.update({ id: req.body.id_bagbitcoin }, { balance_wallet: newPV }, (err, updated) => {
+            if (err)
+                return res.json({ success: false, message: 'Error about query, please try again!', errQuery: err });
+            if (updated.length <= 0)
+                res.json({ success: false, message: 'Can\'t find Bag Bitcoin to update!!' });
+            else
+                res.json({ success: true, message: 'Updated Bag Bitcoin id : #' + updated[0].id });
+        });
+    },
+    /** 
+    *  Function : Transfer pv for moder or admin
+    *  Method : POST
+    *  Inputs : An emailSend, emailReceived, howPV, emailAdmin
+    */
+    transfer: async (req, res, next) => {
+        let flg = 'Failed';
+        if (req.method != 'POST')
+            return res.json({ success: false, message: 'Something is wrong at router\'\s method.' });
+        if (!req.body.emailSend || !req.body.emailReceived || !req.body.howPV || !req.body.emailAdmin || req.body.emailAdmin == '')
+            return res.json({ success: false, message: 'You need send me a emailSend, emailReceived and howPV to use this route.' });
+        if (req.body.emailSend == req.body.emailReceived)
+            return res.json({ success: false, message: 'Can not send PV back to the person who sent it!!' });
+        if (req.body.howPV <= 0)
+            return res.json({ success: false, message: 'Can not send PV is <= 0!!' });
+
+        let senderUser = await User.findOne({ email: req.body.emailSend });
+        let receiverUser = await User.findOne({ email: req.body.emailReceived });
+        if (!senderUser)
+            return res.json({ success: false, message: 'Failed! Not found sender in DB.' });
+        if (!receiverUser)
+            return res.json({ success: false, message: 'Failed! Not found receiver in DB.' });
+
+        let sender = await Bagbitcoin.findOne({ id_user: senderUser.id });
+        let receiver = await Bagbitcoin.findOne({ id_user: receiverUser.id });
+        if (!sender)
+            return res.json({ success: false, message: 'Failed! Not found bag of sender in DB.' });
+        if (!receiver)
+            return res.json({ success: false, message: 'Failed! Not found bag of receiver in DB.' });
+        if (sender.balance_wallet < req.body.howPV)
+            return res.json({ success: false, message: 'Failed! Sender not enough ' + req.body.howPV + 'PV to send.' });
+        let newPvSender = parseFloat(sender.balance_wallet) - parseFloat(req.body.howPV);
+        let newPvReceiver = parseFloat(receiver.balance_wallet) + parseFloat(req.body.howPV);
+        Bagbitcoin.update({ id_user: senderUser.id  }, { balance_wallet: newPvSender }, (err, updated) => {
+            if (err)
+                return res.json({ success: false, message: 'Failed to transfer PV!(Take PV)', errQuery: err });
+            else {
+                Bagbitcoin.update({ id_user: receiverUser.id }, { balance_wallet: newPvReceiver }, (err, updated) => {
+                    
+                    if (err)
+                        return res.json({ success: false, message: 'Failed to transfer PV!(Add PV)', errQuery: err });
+                    else
+                    {
+                        flg = 'Success'
+                        res.json({ success: true, message: 'Success to transfer PV' });
+                    }
+                        
+                    Historyaction.create({AdminDo: req.body.emailAdmin, note : flg+' to transfer PV from '+senderUser.username+' to '+receiverUser.username}).exec((err, his) => {
+                        if(err)
+                            console.log('Failed history transfer. '+err);
+                        else
+                        console.log('Created history transfer');
+                    });
+                });
+            }
+        });
+    },
+
+    /** 
+    *  Function : Create Investment
+    *  Method : POST
+    *  Inputs : An idUser, package
+    */
+    investment: async (req, res, next) => {
+        if (req.method != 'POST')
+            return res.json({ success: false, message: 'Something is wrong at router\'\s method.' });
+        if (!req.body.idUser || !req.body.packet || req.body.idUser == '' || req.body.packet == '')
+            return res.json({ success: false, message: 'You need send me a idUser, packet and interest_percen to use this route.' });
+        let bag = await Bagbitcoin.findOne({ id_user: req.body.idUser });
+        if (!bag)
+            return res.json({ success: false, message: 'Failed to investment! Not found bag of user in DB.' });
+        let package = await Package.findOne({ package: req.body.package });
+        Bagbitcoin.update({ id_user: req.body.idUser }, {
+            investment: package.package,
+            interest_percent: package.interest_percent
+        }, (err, updated) => {
+            if (err)
+                return res.json({ success: false, message: 'Failed to invest!', errQuery: err });
+            else
+                res.json({ success: true, message: 'Success to invest' });
+        });
+    },
+
+    /**
+    *  Function : Action + -
+    *  Method : POST
+    *  Inputs : emailUser, type, howPV
+    */
+    pvAction: async (req, res, next) => {
+
+        if (req.method != 'POST')
+            return res.json({ success: false, message: 'Something is wrong at router\'\s method.' });
+        if (!req.body.emailUser || !req.body.type || !req.body.howPV || req.body.emailUser == '' || req.body.type == '' || req.body.howPV == '')
+            return res.json({ success: false, message: 'You need send me a emailUser, type and howPV to use this route.' });
+        let user = await User.findOne({ email: req.body.emailUser });
+        if (!user)
+            return res.json({ success: false, message: 'Not found user in DB.' });
+        let newWallet;
+        Bagbitcoin.findOne({ id_user: user.id }).exec((err, bag) => {
+            if (err)
+                return res.json({ success: false, message: 'Failed to pvAction!', errQuery: err });
+            if (!bag)
+                return res.json({ success: false, message: 'Not found the bag of user!' });
+            if (req.body.type === '-' && bag.balance_wallet < req.body.howPV)
+                return res.json({ success: false, message: 'That user not enough PV to subtraction !' });
+
+            if (req.body.type === '+')
+                newWallet = bag.balance_wallet + req.body.howPV;
+            else
+                newWallet = bag.balance_wallet - req.body.howPV;
+
+            Bagbitcoin.update({ id: bag.id }, { balance_wallet: newWallet }, (err, updated) => {
+                if (err)
+                    return res.json({ success: false, message: 'Failed to update new balance_wallet!', errQuery: err });
+                if (updated.length <= 0)
+                    return res.json({ success: false, message: 'Not found the bag of user!' });
+                res.json({ success: true, message: 'Updated balance_wallet of username ' + user.username });
+            })
+        });
+    }
+
+}

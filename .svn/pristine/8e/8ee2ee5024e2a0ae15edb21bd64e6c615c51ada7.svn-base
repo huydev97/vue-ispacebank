@@ -1,0 +1,46 @@
+<template>
+  <v-app class="app" id="app">
+    <header-app />
+    <navigation />
+
+    <router-view style="padding: 0;"></router-view>
+    <footer-app></footer-app>
+  </v-app>
+</template>
+
+<script>
+import Navigation from './containers/Navigation'
+import HeaderApp from './containers/Header'
+import FooterApp from './containers/Footer'
+
+export default {
+  name: 'app',
+  components: {
+    Navigation,
+    HeaderApp,
+    FooterApp
+  }
+}
+</script>
+
+<style>
+#app {
+  padding: 0px;
+  margin: 0px;
+  display: flex;
+  flex-direction: column;
+  background-color: #E9EBEE;
+}
+
+
+
+
+
+/*reset css */
+
+* {
+  padding: 0px;
+  margin: 0px;
+  border: none;
+}
+</style>

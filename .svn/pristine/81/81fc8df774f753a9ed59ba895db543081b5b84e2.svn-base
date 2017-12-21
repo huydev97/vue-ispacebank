@@ -1,0 +1,4 @@
+export default {
+    listTransactions: state => state.listTransactions,
+    listUser: state => state.listUser
+}

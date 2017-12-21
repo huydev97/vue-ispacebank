@@ -1,0 +1,61 @@
+<template>
+    <div class="pf-container">
+        <h2 class="body-3 green--text">User Profile</h2>
+        <v-divider></v-divider>
+        <div style="max-width: 500px; width: 100%; margin: 10px;">
+            <h2 class="body-2 green--text" style="margin: 0; padding: 0">Email Addres</h2>
+            <v-text-field style="margin: 0; padding: 0" v-model="email" disabled></v-text-field>
+
+            <h2 class="body-2 green--text" style="margin: 0; padding: 0">Full Name</h2>
+            <v-text-field style="margin: 0; padding: 0" v-model="fullname"></v-text-field>
+
+            <h2 class="body-2 green--text" style="margin: 0; padding: 0">Identification/Passport Card</h2>
+            <v-text-field style="margin: 0; padding: 0" v-model="idpc"></v-text-field>
+
+            <h2 class="body-2 green--text" style="margin: 0; padding: 0">Birthday</h2>
+            <v-text-field style="margin: 0; padding: 0" v-model="birthday"></v-text-field>
+
+            <h2 class="body-2 green--text" style="margin: 0; padding: 0">Country: {{country}}</h2>
+            <country-select :country="country" @onChangeCountry="country = $event"></country-select>
+
+            <h2 class="body-2 green--text" style="margin: 0; padding: 0">Address</h2>
+            <v-text-field style="margin: 0; padding: 0" v-model="address"></v-text-field>
+
+            <h2 class="body-2 green--text" style="margin: 0; padding: 0">Phone Number</h2>
+            <v-text-field style="margin: 0; padding: 0" v-model="phone_number"></v-text-field>
+
+            <v-btn class="green white--text" >Submit</v-btn>
+        </div>
+    </div>
+</template>
+
+<script>
+import CountrySelect from '../../../Auth/CountrySelect'
+export default {
+    name: 'profile-tab',
+    components: {
+        CountrySelect
+    },
+    data() {
+        return {
+            email: 'nguyennam20116@gmail.com',
+            fullname: 'Nguyễn Văn Hoài Nam',
+            idpc: null,
+            birthday: '1970-01-01',
+            country: 'Viet Nam',
+            address: '',
+            phone_number: 1201293
+        }
+    }
+}
+</script>
+
+<style scoped>
+.pf-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+}
+</style>

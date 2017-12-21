@@ -1,0 +1,46 @@
+import Vue from 'vue'
+import App from './App'
+import Cookie from 'vue-cookie'
+import Vuetify from 'vuetify'
+import store from './store'
+import router from './router'
+import('../node_modules/vuetify/dist/vuetify.min.css')
+import * as VueGoogleMaps from 'vue2-google-maps'
+
+Vue.use(VueGoogleMaps, {
+  load: {
+    key: 'AIzaSyBv8uKC9GOqiLpGLqInVw5Fv-7Ohbju5QU',
+    libraries: 'places',
+    region: 'VN',
+    language: 'en-us'
+  }
+})
+
+
+Vue.config.productionTip = false
+Vue.use(Vuetify)
+Vue.use(Cookie)
+
+// check auth for route
+router.beforeEach(async (to, from, next) => {
+
+  if (to.matched.some(record => record.meta.auth)) {
+    await store.dispatch('checkAuth')
+    if (!store.getters.isAuthenticated) {
+      return next('/login')
+    }
+  }
+
+  next()
+
+})
+
+/* eslint-disable no-new */
+new Vue({
+  el: '#app',
+  store,
+  router,
+  render: h => h(App)
+})
+
+

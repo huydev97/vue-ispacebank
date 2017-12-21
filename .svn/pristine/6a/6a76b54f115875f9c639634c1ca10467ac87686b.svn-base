@@ -1,0 +1,48 @@
+<template>
+    <v-container style="margin: 0; padding: 0px;">
+
+        <banner></banner>
+
+        <!-- request a quote -->
+        <div class="request-a-quote" style="height: 120px; padding: 20px; display: flex; flex-direction: row; justify-content: space-between; align-items: center;">
+            <h2 class=" grey--text text--darken-3" style="font-weight: 400; font-size: 22px; line-height: 1; text-align: left;">Bespoke unbiased advice, that makes a genuine difference to your finances</h2>
+            <v-btn to="/contact" primary large class="indigo white--text">REQUEST A QUOTE</v-btn>
+        </div>
+
+        <!-- about -->
+        <about-us></about-us>
+        <!-- services -->
+        <our-services></our-services>
+        <!-- why choose -->
+        <why-choose></why-choose>
+        <!-- partner -->
+        <partner></partner>
+        <!-- our team  -->
+        <our-team></our-team>
+    </v-container>
+</template>
+
+<script>
+import Banner from './Banner'
+import AboutUs from './AboutUs'
+import OurServices from './OurServices'
+import WhyChoose from './WhyChoose'
+import Partner from './Partner'
+import OurTeam from './OurTeam'
+
+export default {
+    name: 'Home',
+    components: {
+        Banner,
+        AboutUs,
+        OurServices,
+        WhyChoose,
+        Partner,
+        OurTeam
+    }
+}
+</script>
+
+<style scoped>
+
+</style>

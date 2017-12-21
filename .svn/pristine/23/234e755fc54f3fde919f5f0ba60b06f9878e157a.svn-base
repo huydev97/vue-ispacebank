@@ -1,0 +1,132 @@
+<template>
+    <div style=" background-color: #222222;">
+        <div class="f-container">
+            <div class="f-flex-1">
+                <div style="width: 100%">
+                    <img class="f-logo" src="../../assets/images/logo-ispace-1.png" />
+                    <p class="grey--text text--dark-4">
+                        We are a leader in global payment services. From small businesses and global corporations, to families near and far away, to NGOs in the most remote communities on Earth, iSpace Bank Helps people and businesses move money – to help grow economies and realize a better world.
+                    </p>
+                </div>
+            </div>
+            <div class="f-flex-1">
+                <div style="width: 100%">
+                    <h2 class="headline white--text">Get In Touch</h2>
+
+                    <p class="body-2 grey--text">
+                        <v-icon dark right style="margin-right: 5px">fa-map-marker</v-icon>
+                        2915 Stillwell Ave, Brooklyn, NY 11224
+                    </p>
+                    <v-divider dark style="margin: 5px 0px 10px 0px"></v-divider>
+                    <p class="body-2 grey--text">
+                        <v-icon dark right style="margin-right: 5px">fa-phone</v-icon>
+                        +1 585-209-2272
+                    </p>
+                    <v-divider dark style="margin: 5px 0px 10px 0px"></v-divider>
+                    <p class="body-2 grey--text">
+                        <v-icon dark right style="margin-right: 5px">mail</v-icon>
+                        evolution@ispacebank.com
+                    </p>
+                    <v-divider dark style="margin: 5px 0px 10px 0px"></v-divider>
+                    <p class="body-2 grey--text">
+                        <v-icon dark right style="margin-right: 5px">fa-globe</v-icon>
+                        https://ispacebank.us
+                    </p>
+                </div>
+            </div>
+            <div class="f-flex-1">
+                <div style="width: 100%; min-width: 300px;">
+                    <h2 class="headline white--text">Extra Links</h2>
+                    <div style="display: flex; flex-direction: row; flex-wrap: wrap;">
+                        <p class="body-2 grey--text" v-for="(item, i) in extraLinks" :key="i" style="margin: 5px;">
+                            <router-link :to="item.href" class="body-2 grey--text" style="text-decoration: none;">
+                                <v-icon dark right style="margin-right: 5px; " class="fa-lg">fa-check</v-icon>
+                                {{item.name}}
+                            </router-link>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="f-flex-1">
+                <div class="f-form-subsrcript" style="width: 100%;">
+                    <h2 class="headline white--text">Subscription</h2>
+                    <p class="body-2 grey--text"> Join the iSpace Bank newsletter for monthly updates, best practices and product news. </p>
+                    <input placeholder="Your Name" />
+                    <input placeholder="Email Address" />
+                    <v-btn error dark large style="width: 100%; margin: 0;">Sigh Up ></v-btn>
+                </div>
+            </div>
+        </div>
+        <v-divider light></v-divider>
+        <div style="padding: 10px;">
+            <p class="body-2 grey--text">Copyright © 2017 iSpace Bank - Investment And Development <br /> Bank Securities, investment advisory services and insurance products are offered through iSpace investment, Inc. SEC-registered investment adviser. iSpace investment, Inc. and iSpace Bank N.A. are affiliated companies. Securities and insurance products offered are: FDIC INSURED – BANK GUARANTEED – MAY LOSE VALUE. This information is not intended to be tax or legal advice. This information cannot be used by any taxpayer for the purpose of avoiding tax penalties that may be imposed on the taxpayer. This information is being used to support the promotion or marketing of the planning strategies discussed herein. iSpace Bank N.A. and its affiliates do not provide legal or tax advice to clients. You should review your particular circumstances with your independent legal and tax advisors.</p>
+        </div>
+    </div>
+</template>
+
+<script>
+export default {
+    data() {
+        return {
+            extraLinks: [
+                { name: 'Home', href: '/' },
+                { name: 'Our Investment', href: '/' },
+                { name: 'Our History', href: '/' },
+                { name: 'News', href: '/news' },
+                { name: 'About', href: '/about' },
+                { name: 'Privacy Policy', href: '/' },
+                { name: 'Partner', href: '/' },
+                { name: 'Service Split', href: '/service' },
+                { name: 'Contact', href: '/contact' },
+                { name: 'Agency Agreement', href: '/' },
+            ]
+        }
+    }
+}
+</script>
+
+<style scoped>
+.f-container {
+    display: flex;
+    -ms-flex-direction: row;
+    -ms-flex-wrap: wrap;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding-bottom: 40px;
+    padding-top: 40px;
+}
+
+.f-logo {
+    width: 20vh;
+    display: block;
+    margin-bottom: 35px;
+    height: auto;
+}
+
+.f-margin-right {
+    margin-right: 2px;
+}
+
+.f-flex-1 {
+    flex: 1;
+    padding: 20px;
+}
+
+.f-form-subsrcript {
+    padding: 38px 20px;
+    background: url('../../assets/images/page-sidebar-subscription-bg.jpg') no-repeat;
+    background-size: cover;
+}
+
+.f-form-subsrcript input {
+    display: block;
+    width: 100%;
+    padding: 12px 20px;
+    font-size: 16px;
+    color: #777;
+    border: 0;
+    background-color: white;
+    margin-bottom: 10px;
+    outline: none;
+}
+</style>

@@ -1,0 +1,160 @@
+<template>
+    <v-container class="container">
+        <v-layout>
+            <v-flex class="style-flex-1">
+                <div class="style-info-header" >
+                    <v-icon style="font-weight: bold">check</v-icon>
+                    <div class="text-header">Feedback Form</div>
+                </div>
+
+                <input type="text" placeholder="Your Name" class="text-field">
+                <input type="text" placeholder="Email" class="text-field">
+                <input type="text" placeholder="Phone Number" class="text-field">
+            </v-flex>
+            <v-flex class="style-flex-2">
+                <textarea 
+                    name="yourMessage" 
+                    id="mess" 
+                    cols="42" 
+                    rows="5"
+                    placeholder="Your Message"
+                    class="text-field"
+                ></textarea>
+                <v-btn dark class="red submit-btn" :ripple="false">
+                    SUBMIT
+                    <v-icon>keyboard_arrow_right</v-icon>
+                </v-btn>
+            </v-flex>
+            <v-flex class="style-flex-1">
+                <div class="style-info-header">
+                    <v-icon style="font-weight: bold">check</v-icon>
+                    <div class="text-header">Contact</div>
+                </div>
+                <div class="style-info-staff">
+                    <img src="../../../assets/images/home/ourteam/staff-05.jpg" class="style-img">
+                    <v-flex column style="padding-left:20px">
+                        <div class="text-header-staff">Ramsey Finnick</div>
+                        <div class="text-staff">Chief Finance Officer</div>
+                        <div class="text-staff">Email:</div>
+                        <div class="text-staff">Phone:</div>
+                    </v-flex>
+                </div>
+                <div class="style-info-staff">
+                    <img src="../../../assets/images/home/ourteam/staff-04.jpg" class="style-img">
+                    <v-flex column style="padding-left:20px">
+                        <div class="text-header-staff">Roberts Spark</div>
+                        <div class="text-staff">Tax Consultant</div>
+                        <div class="text-staff">Email:</div>
+                        <div class="text-staff">Phone:</div>
+                    </v-flex>
+                </div>
+            </v-flex>
+        </v-layout>
+    </v-container>
+</template>
+
+<script>
+export default {
+    name: 'ContactForm',
+    data() {
+        return {
+        }
+    }
+}
+</script>
+
+<style scoped>
+
+.container{
+    padding-left: 40px;
+    padding-right: 40px;
+    padding-top: 60px;
+    padding-bottom: 130px;
+}
+
+.text-field{
+    width: 100%;
+    padding: 12px 20px;
+    margin-top: 27px;
+    box-sizing: border-box;
+    border: 2px solid #eeeeee;
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
+    outline: none;
+    font-size: 15px;
+    font-weight: bold;
+    color: #757575;
+}
+
+.text-field:focus{
+    border: 2px solid #01579b;
+}
+
+.text-field:hover{
+    border: 2px solid #01579b;
+}
+
+.text-header{
+    font-size: 22px;
+    font-weight: bold;
+    padding-left: 5px;
+}
+
+.text-header-staff{
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.text-staff{
+    font-size: 15px;
+    font-weight: bold;
+    color: #757575;
+}
+
+.submit-btn{
+    width: 105px;
+    height: 55px;   
+    text-align: center;
+    font-size: 12px;
+    padding-left: 10px;
+    margin-left: 0px;
+}
+
+.style-info-header{
+    padding-top: 5px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.style-info{
+    padding-top: 5px;
+    padding-bottom: 5px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.style-info-staff{
+    padding-top: 26px;
+    padding-bottom: 5px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.style-img{
+    width: 120px;
+    height: 100px;
+}
+.style-flex-1{
+    flex:1;
+    margin-right: 30px;
+}
+
+.style-flex-2{
+    flex:1;
+    margin-right: 50px;
+    padding-top: 37px; 
+}
+</style>

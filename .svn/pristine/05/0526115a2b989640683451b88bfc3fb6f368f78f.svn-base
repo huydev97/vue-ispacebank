@@ -1,0 +1,66 @@
+<template>
+    <div class="white" style="border-radius: 5px;">
+        <div style="padding: 10px;">
+            <h2 class="body-2 light-green--text text--lighten-1" style="margin: 0;">YOUR AFFILIATE LINK</h2>
+            <v-text-field id="aff-link" style="margin: 0;" :value="_getAffiliateLink" disabled />
+            <v-btn small class="light-green lighten-1 white--text" style="margin: 0;" @click.stop="_copyAffiliateLink" :disabled="copied">{{copied ? 'Copied' : 'Copy Link'}}</v-btn>
+
+            <v-divider style="margin-top: 10px;"></v-divider>
+        </div>
+    </div>
+</template>
+
+<script>
+export default {
+    name: 'link-affiliate',
+    props: {
+        username: String
+    },
+    data() {
+        return {
+            affLink: 'http://ispacebank.us/register/',
+            copied: false,
+        }
+    },
+    computed: {
+        _username() {
+            return this.username
+        },
+        _getAffiliateLink() {
+            return this.affLink + this._username
+        },
+    },
+    methods: {
+        _copyAffiliateLink(e) {
+            var text = document.getElementById('aff-link')
+            var textArea = document.createElement("textarea")
+            textArea.style.position = 'fixed'
+            textArea.style.top = 0
+            textArea.style.left = 0
+            textArea.style.width = '2em'
+            textArea.style.height = '2em'
+            textArea.style.padding = 0
+            textArea.style.border = 'none'
+            textArea.style.outline = 'none'
+            textArea.style.boxShadow = 'none'
+            textArea.style.background = 'transparent'
+            textArea.value = text.value
+            document.body.appendChild(textArea)
+            textArea.select()
+            try {
+                var successful = document.execCommand('copy');
+                var msg = successful ? 'successful' : 'unsuccessful'
+                this.copied = true
+                setTimeout(()=> {this.copied = false}, 700)
+            } catch (err) {
+                console.log(err)
+            }
+            document.body.removeChild(textArea);
+        }
+    }
+}
+</script>
+
+<style scoped>
+
+</style>

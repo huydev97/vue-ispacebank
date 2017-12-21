@@ -1,0 +1,29 @@
+<template>
+    <div>
+        <transaction-list :isAdmin="false" :listTransactions="userHistoryTransaction">
+        </transaction-list>
+    </div>
+</template>
+
+<script>
+import { mapGetters, mapActions } from 'vuex'
+import TransactionList from '../../../components/TransactionList'
+export default {
+    components: {
+        TransactionList
+    },
+    computed: {
+        ...mapGetters(['userHistoryTransaction', 'user'])
+    },
+    methods: {
+        ...mapActions(['getUserHistoryTransaction'])
+    },
+    mounted() {
+        this.getUserHistoryTransaction({ idUser: this.user.id })
+    }
+}
+</script>
+
+<style scoped>
+
+</style>
